@@ -1,0 +1,65 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <span class="welcome-text">Hello on board!</span>
+      <h1 class="login-title">LOGIN</h1>
+    </div>
+
+    <form class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          [(ngModel)]="loginData.email"
+          class="form-control" 
+          placeholder="you@email.com"
+          autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <input 
+            type="password" 
+            id="password" 
+            name="password"
+            [(ngModel)]="loginData.password"
+            class="form-control" 
+            placeholder="••••••••"
+            autocomplete="current-password">
+          <button type="button" class="view-password">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-actions">
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button 
+        type="button" 
+        class="btn btn-primary btn-block" 
+        [disabled]="isLoading"
+        (click)="onLogin()">
+        <span *ngIf="!isLoading">SIGN IN</span>
+        <span *ngIf="isLoading">Cargando...</span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Don't have an account? <a href="#" class="signup-link">Sign Up</a></p>
+    </div>
+  </div>
+
+  <div class="version-tag">Ver. 0.01.00</div>
+</div>

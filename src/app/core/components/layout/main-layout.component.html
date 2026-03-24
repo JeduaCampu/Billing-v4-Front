@@ -1,0 +1,45 @@
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2 style="color: white;">Billing <span>v4</span></h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a routerLink="/dashboard" routerLinkActive="active">
+                        Panel Principal
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/billing" routerLinkActive="active">
+                        <span class="icon">📊</span> Facturación
+                    </a>
+                </li>
+                <li *ngIf="isAdmin">
+                    <a routerLink="/users" routerLinkActive="active">
+                        <span class="icon">👥</span> Usuarios
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" (click)="logout()">
+                Cerrar Sesión
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="user-info">
+                <p>Bienvenido, <strong>{{ userName }}</strong></p>
+            </div>
+        </header>
+
+        <section class="page-container">
+            <router-outlet></router-outlet>
+        </section>
+    </main>
+</div>

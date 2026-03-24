@@ -1,0 +1,220 @@
+.billing-page {
+    padding: 1.5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .header-info {
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-main);
+        }
+
+        p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+.table-container {
+    /* La clase .card global ya provee fondo, padding general, borde y sombra */
+    padding: 1.5rem 2rem;
+
+    .table-tools {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1.5rem;
+
+        .search-box {
+            input {
+                width: 300px;
+                padding: 0.5rem 1rem;
+                border: 1px solid var(--border-color);
+                border-radius: var(--radius-sm);
+                font-size: 0.875rem;
+                color: var(--text-main);
+                outline: none;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+                &::placeholder {
+                    color: var(--text-muted);
+                    opacity: 0.7;
+                }
+
+                &:focus {
+                    border-color: var(--primary-light);
+                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                }
+            }
+        }
+    }
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+        text-align: left;
+        padding: 1rem;
+        background-color: var(--bg-main);
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--border-color);
+
+        &.text-center {
+            text-align: center;
+        }
+    }
+
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+        font-size: 0.875rem;
+        color: var(--text-main);
+
+        &.font-bold {
+            font-weight: 600;
+            color: var(--primary);
+        }
+    }
+
+    tbody tr {
+        transition: background-color 0.15s ease;
+
+        &:hover {
+            background-color: #f8fafc;
+            /* Un gris muy sutil al pasar el mouse */
+        }
+    }
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+
+    /* Clases dinámicas inyectadas por Angular según el JSON del backend */
+    &.valid {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    &.processing,
+    &.pending {
+        background-color: #fef9c3;
+        color: #854d0e;
+    }
+
+    &.canceled,
+    &.error {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+
+    .btn-icon {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background-color: var(--bg-main);
+            color: var(--primary);
+            border-color: var(--primary-light);
+        }
+    }
+
+    .cancel-btn {
+        &:hover:not(:disabled) {
+            color: #dc2626;
+            border-color: #fca5a5;
+            background-color: #fef2f2;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* --- ESTILOS DE ALERTAS --- */
+.alert {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.error-alert {
+    color: var(--error);
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+}
+
+.success-alert {
+    color: var(--success);
+    background-color: #dcfce7;
+    border: 1px solid #bbf7d0;
+}
+
+/* --- ESTADO VACÍO TABLA --- */
+.empty-state {
+    text-align: center;
+    padding: 3rem !important;
+    /* Forza el sobreescribir el padding normal del td */
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* --- CONTROLES DE PAGINACIÓN --- */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+
+    .pagination-info {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .pagination-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+}

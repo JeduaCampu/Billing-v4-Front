@@ -42,3 +42,14 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+
+# Environments
+/environments
+src/environments/environment.ts
+src/environments/environment.development.ts
+src/environments/environment.prod.ts
+
+# Si llegas a usar archivos .env en el backend
+.env
+.env.local

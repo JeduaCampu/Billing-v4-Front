@@ -1,0 +1,47 @@
+<p>dashboard-home works!</p>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Panel de Control</h1>
+    <p>Resumen general de facturación y actividad.</p>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let stat of stats" [style.border-left-color]="stat.color">
+      <div class="stat-content">
+        <span class="stat-label">{{ stat.label }}</span>
+        <h2 class="stat-value">{{ stat.value }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="card-table">
+      <div class="card-header">
+        <h3>Últimas Facturas</h3>
+        <button class="btn-text" routerLink="/billing">Ver todas</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Monto</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inv of recentInvoices">
+            <td>{{ inv.id }}</td>
+            <td>{{ inv.client }}</td>
+            <td>{{ inv.amount | currency }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="inv.status.toLowerCase()">
+                {{ inv.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

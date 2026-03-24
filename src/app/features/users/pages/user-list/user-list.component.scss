@@ -1,0 +1,101 @@
+.users-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0.5rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .header-info {
+    h1 { font-size: 1.75rem; color: var(--text-main); margin: 0; }
+    p { color: var(--text-muted); margin-top: 0.25rem; }
+  }
+}
+
+.table-container {
+  overflow: hidden;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th {
+    background-color: #f8fafc;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--text-main);
+
+    &.font-bold {
+      font-weight: 600;
+      color: var(--primary);
+    }
+  }
+
+  tr:hover {
+    background-color: #f8fafc;
+  }
+}
+
+/* Badges de Rol */
+.role-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  
+  &.admin { background: var(--primary); color: white; }
+  &.user, &.editor { background: var(--accent); color: white; }
+}
+
+/* Badges de Estado */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  &.active, &.activo { background: #dcfce7; color: #166534; }
+  &.inactive, &.inactivo { background: #fee2e2; color: #991b1b; }
+}
+
+/* Acciones */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+
+  .btn-icon {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--bg-main);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    &.btn-delete:hover {
+      border-color: var(--error);
+      background: #fef2f2;
+    }
+  }
+}

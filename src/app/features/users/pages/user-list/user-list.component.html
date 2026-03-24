@@ -1,0 +1,48 @@
+<div class="users-page">
+    <header class="page-header">
+        <div class="header-info">
+            <h1>Gestión de Usuarios</h1>
+            <p>Administra los accesos y roles de tu equipo en Billing v4.</p>
+        </div>
+        <button class="btn btn-primary">
+            <span>+</span> Nuevo Usuario
+        </button>
+    </header>
+
+    <div class="table-container card">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users">
+                    <td class="font-bold">{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <span class="role-badge" [ngClass]="user.role.toLowerCase()">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge" [ngClass]="user.status.toLowerCase()">
+                            {{ user.status }}
+                        </span>
+                    </td>
+                    <td class="actions">
+                        <button class="btn-icon" (click)="editUser(user)" title="Editar">✏️</button>
+                        <button class="btn-icon btn-delete" *ngIf="user.role !== 'Admin'" (click)="deleteUser(user.id)"
+                            title="Eliminar">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
