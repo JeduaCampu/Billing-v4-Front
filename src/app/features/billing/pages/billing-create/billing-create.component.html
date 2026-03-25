@@ -55,6 +55,21 @@
                 <hr class="divider">
 
                 <h3 class="section-title">Datos del Cliente</h3>
+
+                <div class="form-group"
+                    style="margin-bottom: 1.5rem; background-color: var(--bg-main); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <label style="color: var(--primary); margin-bottom: 0.5rem; display: block;">Autocompletar desde
+                        cliente existente</label>
+                    <select class="form-control" (change)="onCustomerSelect($event)"
+                        style="border-color: var(--primary-light);">
+                        <option value="NEW">--- + Capturar Nuevo Cliente ---</option>
+
+                        <option *ngFor="let c of customers" [value]="c.id">
+                            {{ c.legalName }} ({{ c.taxId }})
+                        </option>
+                    </select>
+                </div>
+
                 <div formGroupName="customer">
                     <div class="form-grid">
                         <div class="form-group col-span-2">
@@ -68,12 +83,26 @@
                         </div>
                         <div class="form-group">
                             <label>Régimen Fiscal</label>
-                            <input type="text" formControlName="taxRegime" class="form-control"
-                                placeholder="Ej: 601, 603">
+                            <select formControlName="taxRegime" class="form-control" [disabled]="!rfcType">
+                                <option value="" disabled selected>
+                                    {{ rfcType ? 'Seleccione...' : 'Capture un RFC válido primero' }}
+                                </option>
+                                <option *ngFor="let reg of availableRegimenes" [value]="reg.key">
+                                    {{ reg.key }} - {{ reg.desc }}
+                                </option>
+                            </select>
                         </div>
+
                         <div class="form-group">
                             <label>Uso CFDI</label>
-                            <input type="text" formControlName="cfdiUse" class="form-control" placeholder="Ej: G03">
+                            <select formControlName="cfdiUse" class="form-control" [disabled]="!rfcType">
+                                <option value="" disabled selected>
+                                    {{ rfcType ? 'Seleccione...' : 'Capture un RFC válido primero' }}
+                                </option>
+                                <option *ngFor="let uso of availableUsos" [value]="uso.key">
+                                    {{ uso.key }} - {{ uso.desc }}
+                                </option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Correo Electrónico</label>

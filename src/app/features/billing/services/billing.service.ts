@@ -100,4 +100,14 @@ export class BillingService {
 
         return this.http.delete(`${this.apiUrl}/invoices/${uuid}`, options);
     }
+
+    getCustomers(): Observable<any> {
+        const token = this.authService.token;
+        let headers = new HttpHeaders();
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        // Ajusta la ruta si tu endpoint de clientes es diferente
+        return this.http.get(`${this.apiUrl}/clients`, { headers });
+    }
 }

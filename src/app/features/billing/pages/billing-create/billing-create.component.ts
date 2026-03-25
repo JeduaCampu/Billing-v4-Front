@@ -15,16 +15,76 @@ export class BillingCreateComponent implements OnInit {
   invoiceForm!: FormGroup;
   isLoading = false;
   isDraftReviewed = false;
+  customers: any[] = [];
+
+  // --- CATÁLOGOS DEL SAT ---
+  readonly regimenesSAT = {
+    moral: [
+      { key: '601', desc: 'General de Ley Personas Morales' },
+      { key: '603', desc: 'Personas Morales con Fines no Lucrativos' },
+      { key: '626', desc: 'Régimen Simplificado de Confianza (RESICO)' }
+    ],
+    fisica: [
+      { key: '605', desc: 'Sueldos y Salarios e Ingresos Asimilados' },
+      { key: '606', desc: 'Arrendamiento' },
+      { key: '612', desc: 'Personas Físicas con Actividades Empresariales y Profesionales' },
+      { key: '626', desc: 'Régimen Simplificado de Confianza (RESICO)' }
+    ]
+  };
+
+  readonly usosCfdiSAT = {
+    moral: [
+      { key: 'G01', desc: 'Adquisición de mercancías' },
+      { key: 'G03', desc: 'Gastos en general' },
+      { key: 'I04', desc: 'Equipo de cómputo y accesorios' },
+      { key: 'I08', desc: 'Otra maquinaria y equipo' }
+    ],
+    fisica: [
+      { key: 'G01', desc: 'Adquisición de mercancías' },
+      { key: 'G03', desc: 'Gastos en general' },
+      { key: 'I04', desc: 'Equipo de cómputo y accesorios' },
+      { key: 'D01', desc: 'Honorarios médicos, dentales y gastos hospitalarios' },
+      { key: 'D02', desc: 'Gastos médicos por incapacidad o discapacidad' },
+      { key: 'CP01', desc: 'Pagos' }
+    ]
+  };
+
+  // --- GETTERS DINÁMICOS ---
+  
+  // Determina el tipo de RFC actual
+  get rfcType(): 'fisica' | 'moral' | null {
+    if (!this.invoiceForm) return null;
+    const rfc = this.invoiceForm.get('customer.rfc')?.value || '';
+    if (rfc.length === 12) return 'moral';
+    if (rfc.length === 13) return 'fisica';
+    return null;
+  }
+
+  // Devuelve la lista de regímenes filtrada
+  get availableRegimenes() {
+    const type = this.rfcType;
+    if (type === 'moral') return this.regimenesSAT.moral;
+    if (type === 'fisica') return this.regimenesSAT.fisica;
+    return []; // Vacío si el RFC aún no está completo
+  }
+
+  // Devuelve la lista de usos de CFDI filtrada
+  get availableUsos() {
+    const type = this.rfcType;
+    if (type === 'moral') return this.usosCfdiSAT.moral;
+    if (type === 'fisica') return this.usosCfdiSAT.fisica;
+    return [];
+  }
 
   constructor(
     private fb: FormBuilder,
     private billingService: BillingService,
-    private cdr: ChangeDetectorRef // 1. Inyectamos ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-
+    this.loadCustomers();
     // 2. Ajustamos la detección de cambios
     this.invoiceForm.valueChanges.subscribe(() => {
       // Solo lo bloqueamos si ya estaba habilitado
@@ -33,6 +93,56 @@ export class BillingCreateComponent implements OnInit {
         this.cdr.detectChanges(); // Forzamos actualización visual del botón
       }
     });
+  }
+
+  loadCustomers(): void {
+    this.billingService.getCustomers().subscribe({
+      next: (res) => {
+        this.customers = res.data || res;
+      },
+      error: (err) => console.error('Error al cargar clientes', err)
+    });
+  }
+
+  onCustomerSelect(event: any): void {
+    const customerId = event.target.value;
+
+    if (customerId === 'NEW' || !customerId) {
+      // Limpiamos el formulario para capturar un cliente nuevo
+      this.invoiceForm.get('customer')?.reset({
+        taxRegime: '603',
+        cfdiUse: 'G03',
+        address: { country: 'MEX' }
+      });
+    } else {
+      // Buscamos el cliente seleccionado
+      const selected = this.customers.find(c => c.id === customerId);
+      
+      if (selected) {
+        // En tu JSON la dirección ya viene como un objeto, no como string
+        const address = selected.address || {};
+
+        // Autocompletamos el formGroup del cliente mapeando las propiedades de tu JSON
+        this.invoiceForm.get('customer')?.patchValue({
+          name: selected.legalName,           // Mapeado a legalName
+          rfc: selected.taxId,              // Mapeado a taxId
+          taxRegime: selected.taxSystem || '603', // Mapeado a taxSystem
+          email: selected.email,
+          cfdiUse: 'G03', 
+          address: {
+            street: address.street || '',
+            exterior: address.exterior || '',
+            interior: address.interior || '',
+            neighborhood: address.neighborhood || '',
+            zip: address.zip || selected.zipCode || '', // Usa el zip de la dirección o el global
+            city: address.city || '',
+            municipality: address.municipality || '',
+            state: address.state || '',
+            country: address.country || 'MEX'
+          }
+        });
+      }
+    }
   }
 
   initForm(): void {

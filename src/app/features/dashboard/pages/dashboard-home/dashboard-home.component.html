@@ -1,47 +1,99 @@
-<p>dashboard-home works!</p>
 <div class="dashboard-container">
   <header class="dashboard-header">
-    <h1>Panel de Control</h1>
-    <p>Resumen general de facturación y actividad.</p>
+    <div class="header-titles">
+      <h1>Panel de Control</h1>
+      <p>Resumen general de facturación y actividad.</p>
+    </div>
+
+    <button class="btn-export" (click)="exportReport()" [disabled]="isExporting">
+      <span *ngIf="!isExporting">Descargar Reporte (CSV)</span>
+      <span *ngIf="isExporting">Generando...</span>
+    </button>
   </header>
 
-  <div class="stats-grid">
-    <div class="stat-card" *ngFor="let stat of stats" [style.border-left-color]="stat.color">
-      <div class="stat-content">
-        <span class="stat-label">{{ stat.label }}</span>
-        <h2 class="stat-value">{{ stat.value }}</h2>
+  <div class="card filter-bar">
+    <div class="filter-group">
+      <div class="field">
+        <label>Desde:</label>
+        <input type="date" [(ngModel)]="filterStartDate" class="form-control" (change)="applyFilters()">
       </div>
+
+      <div class="field">
+        <label>Hasta:</label>
+        <input type="date" [(ngModel)]="filterEndDate" class="form-control" (change)="applyFilters()">
+      </div>
+    </div>
+
+    <div class="filter-info">
+      <i class="material-icons">info</i>
+      <span>Filtrando datos por periodo seleccionado</span>
     </div>
   </div>
 
-  <div class="dashboard-content">
-    <div class="card-table">
-      <div class="card-header">
-        <h3>Últimas Facturas</h3>
-        <button class="btn-text" routerLink="/billing">Ver todas</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Monto</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let inv of recentInvoices">
-            <td>{{ inv.id }}</td>
-            <td>{{ inv.client }}</td>
-            <td>{{ inv.amount | currency }}</td>
-            <td>
-              <span class="status-badge" [ngClass]="inv.status.toLowerCase()">
-                {{ inv.status }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Actualizando información del panel...</p>
   </div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats" [style.border-left-color]="stat.color">
+        <div class="stat-content">
+          <span class="stat-label">{{ stat.label }}</span>
+          <h2 class="stat-value">{{ stat.value }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="card trend-card">
+      <h3 class="card-title">Tendencia de Ingresos (Últimos 6 Meses)</h3>
+      <div class="chart-wrapper">
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [legend]="lineChartLegend" type="line">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="card-table">
+        <div class="table-header">
+          <h3>Últimas Facturas del Periodo</h3>
+          <button class="btn-text" routerLink="/billing">Ver todas</button>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Folio</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="recentInvoices.length === 0">
+                <td colspan="5" class="empty-row">
+                  No se encontraron facturas en el rango de fechas seleccionado.
+                </td>
+              </tr>
+              <tr *ngFor="let inv of recentInvoices">
+                <td class="font-bold">{{ inv.folio }}</td>
+                <td>{{ inv.customerName }}</td>
+                <td>{{ inv.date | date:'dd/MM/yyyy' }}</td>
+                <td>{{ inv.total | currency:'MXN':'symbol' }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="inv.status.toLowerCase()">
+                    {{ inv.status | uppercase }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
 </div>

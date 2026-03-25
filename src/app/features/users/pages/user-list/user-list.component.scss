@@ -1,101 +1,158 @@
-.users-page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 0.5rem;
-}
+// Definición de variables locales si no usas globales
+$primary-color: #3b82f6; // Azul corporativo
+$text-main: #0f172a;
+$text-muted: #64748b;
+$bg-light: #f8fafc;
+$border-color: #e2e8f0;
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  .header-info {
-    h1 { font-size: 1.75rem; color: var(--text-main); margin: 0; }
-    p { color: var(--text-muted); margin-top: 0.25rem; }
-  }
-}
+.users-container {
+  padding: 1.5rem 2rem;
+  background-color: $bg-light;
+  min-height: 100vh;
 
-.table-container {
-  overflow: hidden;
-}
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  
-  th {
-    background-color: #f8fafc;
-    padding: 1rem 1.5rem;
-    text-align: left;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  td {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.9rem;
-    color: var(--text-main);
-
-    &.font-bold {
-      font-weight: 600;
-      color: var(--primary);
+    .header-titles {
+      h1 { font-size: 1.75rem; font-weight: 700; color: $text-main; margin: 0; }
+      p { color: $text-muted; margin-top: 0.25rem; font-size: 0.95rem; }
     }
   }
+}
 
-  tr:hover {
-    background-color: #f8fafc;
+// Estilos de la Tarjeta (Card)
+.card-table {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid $border-color;
+  overflow: hidden;
+
+  .table-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 { margin: 0; font-size: 1.1rem; font-weight: 600; color: $text-main; }
   }
 }
 
-/* Badges de Rol */
-.role-badge {
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  
-  &.admin { background: var(--primary); color: white; }
-  &.user, &.editor { background: var(--accent); color: white; }
+// Estilos de la Tabla
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    thead {
+      background: #f1f5f9;
+      tr th {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        color: $text-muted;
+      }
+    }
+
+    tbody tr {
+      border-bottom: 1px solid $border-color;
+      transition: background 0.2s;
+
+      &:hover { background-color: #f8fafc; }
+      &:last-child { border-bottom: none; }
+
+      td {
+        padding: 1rem 1.5rem;
+        font-size: 0.9rem;
+        color: $text-main;
+        vertical-align: middle;
+
+        &.font-bold { font-weight: 600; }
+      }
+    }
+  }
 }
 
-/* Badges de Estado */
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  &.active, &.activo { background: #dcfce7; color: #166534; }
-  &.inactive, &.inactivo { background: #fee2e2; color: #991b1b; }
-}
-
-/* Acciones */
-.actions {
+// Botones y Acciones
+.btn-primary {
+  background: $primary-color;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover { background: darken($primary-color, 10%); transform: translateY(-1px); box-shadow: 0 4px 12px rgba($primary-color, 0.3); }
+  i { font-size: 1.25rem; }
+}
+
+.role-text {
+  font-weight: 600;
+  color: #1e40af;
+  background: #dbeafe;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.actions-cell {
+  display: flex;
   justify-content: center;
+  gap: 0.5rem;
 
   .btn-icon {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 0.4rem;
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s;
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
 
-    &:hover {
-      background: var(--bg-main);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    &.btn-delete:hover {
-      border-color: var(--error);
-      background: #fef2f2;
-    }
+    i { font-size: 1.2rem; }
+    &.edit { color: $primary-color; &:hover { background: #eff6ff; } }
+    &.delete { color: #ef4444; &:hover { background: #fef2f2; } }
   }
 }
+
+// Estados Vacíos y Carga
+.empty-row {
+  text-align: center;
+  padding: 3rem !important;
+  color: $text-muted;
+  font-style: italic;
+}
+
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem;
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
