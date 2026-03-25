@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- IMPORTANTE
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BillingRoutingModule } from './billing-routing.module';
 import { BillingListComponent } from './pages/billing-list/billing-list.component';

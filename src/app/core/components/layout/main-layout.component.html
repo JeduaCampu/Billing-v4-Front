@@ -16,7 +16,8 @@
                         <span class="icon">📊</span> Facturación
                     </a>
                 </li>
-                <li>
+
+                <li *ngIf="isAdmin">
                     <a routerLink="/users" routerLinkActive="active">
                         <span class="icon">👥</span> Usuarios
                     </a>

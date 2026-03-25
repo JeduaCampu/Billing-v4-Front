@@ -1,0 +1,58 @@
+<div class="form-container">
+    <div class="form-header">
+        <h2>{{ isEditMode ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+        <p>Completa la información para gestionar el acceso.</p>
+    </div>
+
+    <div *ngIf="isLoading && isEditMode" class="form-loading">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading || !isEditMode">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nombre Completo</label>
+                <input type="text" formControlName="name" placeholder="Ej. Pedro Contador">
+                <div class="error-msg" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched">
+                    El nombre es obligatorio (mín. 3 caracteres).
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input type="email" formControlName="email" placeholder="pedro@empresa.com">
+                <div class="error-msg" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+                    Ingresa un email válido.
+                </div>
+            </div>
+
+            <div class="form-group" *ngIf="isEditMode">
+                <label>Nueva Contraseña (Opcional)</label>
+                <input type="password" formControlName="password" placeholder="Deja en blanco para mantener la actual">
+            </div>
+
+            <div class="form-group">
+                <label>Rol / Permisos</label>
+                <select formControlName="roleId">
+                    <option value="" disabled>Selecciona un rol</option>
+                    <option *ngFor="let role of roles" [value]="role.id">
+                        {{ role.name | titlecase }}
+                    </option>
+                </select>
+                <div class="error-msg" *ngIf="userForm.get('roleId')?.invalid && userForm.get('roleId')?.touched">
+                    Debes asignar un rol.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="isLoading">
+                Cancelar
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="userForm.invalid || isLoading">
+                <span>{{ isLoading ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Crear Usuario') }}</span>
+            </button>
+        </div>
+    </form>
+</div>

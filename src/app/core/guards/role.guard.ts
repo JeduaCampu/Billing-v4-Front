@@ -7,15 +7,12 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    // Utilizamos el helper que ya creaste en tu AuthService
     const hasPermission = allowedRoles.some(role => authService.hasRole(role));
 
     if (hasPermission) {
       return true;
     }
-
-    // Si no tiene permiso, alertamos y lo mandamos a una ruta segura (ej. dashboard)
-    alert('No tienes permisos para ver esta sección');
-    return router.parseUrl('/dashboard'); 
+    console.warn('Acceso denegado: Usuario no es Admin');
+    return router.parseUrl('/access-denied'); 
   };
 };

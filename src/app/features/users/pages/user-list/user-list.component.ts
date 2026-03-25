@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { UserService } from '../../services/user.service'; // Asegúrate que la ruta sea correcta
+import { UserService } from '../../services/user.service';
 import { finalize } from 'rxjs/operators';
+import Swal from 'sweetalert2';
+import { AuthService } from '../../../../core/services/auth.service';
 
-// 1. Interfaz actualizada según el JSON real del backend
 interface User {
   id: string;
   name: string;
@@ -24,9 +25,11 @@ interface User {
   standalone: false
 })
 export class UserListComponent implements OnInit {
-
   isLoading = true;
   users: User[] = [];
+
+  showModal = false;
+  selectedUserId: string | null = null;
 
   constructor(
     private userService: UserService,
@@ -37,9 +40,6 @@ export class UserListComponent implements OnInit {
     this.loadUsers();
   }
 
-  /**
-   * Carga los usuarios desde el backend
-   */
   loadUsers(): void {
     this.isLoading = true;
     this.userService.getUsers()
@@ -49,31 +49,75 @@ export class UserListComponent implements OnInit {
       }))
       .subscribe({
         next: (res) => {
-          // El backend responde con { data: [...] }
           this.users = res.data || [];
         },
         error: (err) => {
           console.error('Error al cargar usuarios:', err);
+          this.isLoading = false;
         }
       });
   }
 
-  /**
-   * Elimina un usuario llamando al servicio real
-   */
-  deleteUser(id: string): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-      this.userService.deleteUser(id).subscribe({
-        next: () => {
-          // Filtramos localmente para no recargar toda la lista
-          this.users = this.users.filter(u => u.id !== id);
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          alert(err.error?.error?.message || 'No se pudo eliminar el usuario');
-          console.error('Error al eliminar:', err);
-        }
-      });
+  openModal(id: string | null = null): void {
+    this.selectedUserId = id;
+    this.showModal = true;
+    this.cdr.detectChanges();
+  }
+
+  closeModal(data: any): void {
+    this.showModal = false;
+    this.selectedUserId = null;
+
+    if (data && typeof data === 'object' && data.id) {
+      this.handleUserUpdateLocally(data);
     }
+    else if (data === true) {
+      this.loadUsers();
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  private handleUserUpdateLocally(userData: User): void {
+    const index = this.users.findIndex(u => u.id === userData.id);
+
+    if (index !== -1) {
+      this.users[index] = { ...userData };
+    } else {
+      this.users = [userData, ...this.users];
+    }
+    this.cdr.detectChanges();
+  }
+
+  deleteUser(id: string): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Esta acción eliminará el acceso del usuario permanentemente.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3b82f6',
+      cancelButtonColor: '#ef4444',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.deleteUser(id).subscribe({
+          next: () => {
+            this.users = this.users.filter(u => u.id !== id);
+            this.cdr.detectChanges();
+            Swal.fire({
+              icon: 'success',
+              title: 'Eliminado',
+              timer: 1500,
+              showConfirmButton: false
+            });
+          },
+          error: (err) => {
+            Swal.fire('Error', err.error?.error?.message || 'No se pudo eliminar', 'error');
+          }
+        });
+      }
+    });
   }
 }

@@ -19,32 +19,30 @@ export class AuthService {
     const body = {
       email,
       password,
-      tenantId: (environment as any).tenantId // Usamos el ID de tu ejemplo
+      tenantId: (environment as any).tenantId
     };
 
     return this.http.post<any>(`${environment.apiUrl}/auth/token`, body).pipe(
       tap(res => {
-        // Guardamos todo según tu respuesta JSON
         localStorage.setItem('access_token', res.accessToken);
         localStorage.setItem('refresh_token', res.refreshToken);
         localStorage.setItem('billing_user', JSON.stringify(res.user));
-        
+
         this.userSubject.next(res.user);
       })
     );
   }
 
-  logout() {
-    localStorage.clear();
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     this.userSubject.next(null);
-    window.location.href = '/login';
   }
 
   get token(): string | null {
     return localStorage.getItem('access_token');
   }
 
-  // Helper para verificar roles (el array que viene en tu JSON)
   hasRole(role: string): boolean {
     const user = this.userSubject.value;
     return user?.roles?.includes(role) || false;
@@ -52,7 +50,7 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     const token = localStorage.getItem('access_token');
-    return !!token; 
+    return !!token;
   }
 
 }

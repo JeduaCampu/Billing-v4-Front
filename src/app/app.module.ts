@@ -5,7 +5,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptor
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CoreModule } from './core/core.module'; // El Layout ya viene aquí dentro
+import { CoreModule } from './core/core.module';
 import { environment } from '../environments/environment';
 
 @NgModule({

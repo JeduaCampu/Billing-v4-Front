@@ -5,7 +5,7 @@
             <p>Administra los accesos y permisos de tu organización.</p>
         </div>
 
-        <button class="btn-primary" routerLink="new">
+        <button class="btn-primary" (click)="openModal()">
             <span> + Nuevo Usuario</span>
         </button>
     </header>
@@ -47,7 +47,7 @@
                         </td>
                         <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
                         <td class="actions-cell">
-                            <button class="btn-icon edit" [routerLink]="['edit', user.id]" title="Editar">
+                            <button class="btn-icon edit" (click)="openModal(user.id)" title="Editar">
                                 <i class="material-icons">edit</i>
                             </button>
                             <button class="btn-icon delete" (click)="deleteUser(user.id)" title="Eliminar">
@@ -58,5 +58,14 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal(false)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-x" (click)="closeModal(false)">&times;</button>
+
+        <app-user-form [userId]="selectedUserId" (onClose)="closeModal($event)">
+        </app-user-form>
     </div>
 </div>

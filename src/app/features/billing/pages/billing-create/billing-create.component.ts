@@ -51,7 +51,6 @@ export class BillingCreateComponent implements OnInit {
 
   // --- GETTERS DINÁMICOS ---
   
-  // Determina el tipo de RFC actual
   get rfcType(): 'fisica' | 'moral' | null {
     if (!this.invoiceForm) return null;
     const rfc = this.invoiceForm.get('customer.rfc')?.value || '';
@@ -60,15 +59,13 @@ export class BillingCreateComponent implements OnInit {
     return null;
   }
 
-  // Devuelve la lista de regímenes filtrada
   get availableRegimenes() {
     const type = this.rfcType;
     if (type === 'moral') return this.regimenesSAT.moral;
     if (type === 'fisica') return this.regimenesSAT.fisica;
-    return []; // Vacío si el RFC aún no está completo
+    return [];
   }
 
-  // Devuelve la lista de usos de CFDI filtrada
   get availableUsos() {
     const type = this.rfcType;
     if (type === 'moral') return this.usosCfdiSAT.moral;
@@ -85,12 +82,10 @@ export class BillingCreateComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.loadCustomers();
-    // 2. Ajustamos la detección de cambios
     this.invoiceForm.valueChanges.subscribe(() => {
-      // Solo lo bloqueamos si ya estaba habilitado
       if (this.isDraftReviewed) {
         this.isDraftReviewed = false;
-        this.cdr.detectChanges(); // Forzamos actualización visual del botón
+        this.cdr.detectChanges();
       }
     });
   }
@@ -108,25 +103,21 @@ export class BillingCreateComponent implements OnInit {
     const customerId = event.target.value;
 
     if (customerId === 'NEW' || !customerId) {
-      // Limpiamos el formulario para capturar un cliente nuevo
       this.invoiceForm.get('customer')?.reset({
         taxRegime: '603',
         cfdiUse: 'G03',
         address: { country: 'MEX' }
       });
     } else {
-      // Buscamos el cliente seleccionado
       const selected = this.customers.find(c => c.id === customerId);
       
       if (selected) {
-        // En tu JSON la dirección ya viene como un objeto, no como string
         const address = selected.address || {};
 
-        // Autocompletamos el formGroup del cliente mapeando las propiedades de tu JSON
         this.invoiceForm.get('customer')?.patchValue({
-          name: selected.legalName,           // Mapeado a legalName
-          rfc: selected.taxId,              // Mapeado a taxId
-          taxRegime: selected.taxSystem || '603', // Mapeado a taxSystem
+          name: selected.legalName,
+          rfc: selected.taxId,
+          taxRegime: selected.taxSystem || '603',
           email: selected.email,
           cfdiUse: 'G03', 
           address: {
@@ -134,7 +125,7 @@ export class BillingCreateComponent implements OnInit {
             exterior: address.exterior || '',
             interior: address.interior || '',
             neighborhood: address.neighborhood || '',
-            zip: address.zip || selected.zipCode || '', // Usa el zip de la dirección o el global
+            zip: address.zip || selected.zipCode || '',
             city: address.city || '',
             municipality: address.municipality || '',
             state: address.state || '',
@@ -217,13 +208,8 @@ export class BillingCreateComponent implements OnInit {
     this.billingService.createDraft(payload).subscribe({
       next: (blob: Blob) => {
         Swal.close();
-
-        // 3. Abrimos el PDF primero
         const fileURL = window.URL.createObjectURL(blob);
         window.open(fileURL, '_blank');
-
-        // 4. Pequeño delay para asegurar que el navegador abre la pestaña 
-        // antes de mostrar el SweetAlert
         setTimeout(() => {
           Swal.fire({
             icon: 'info',
@@ -237,7 +223,6 @@ export class BillingCreateComponent implements OnInit {
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
-              // 5. IMPORTANTE: Habilitamos y forzamos la actualización visual
               this.isDraftReviewed = true;
               this.cdr.detectChanges();
 
@@ -250,12 +235,11 @@ export class BillingCreateComponent implements OnInit {
                 timer: 3000
               });
             } else {
-              // Si eligen "Modificar", nos aseguramos de que siga bloqueado
               this.isDraftReviewed = false;
               this.cdr.detectChanges();
             }
           });
-        }, 300); // 300ms de delay
+        }, 300);
       },
       error: (err) => {
         console.error('Error al generar borrador:', err);
@@ -297,7 +281,6 @@ export class BillingCreateComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // 6. Corregida la lógica de validación aquí
     if (!this.isDraftReviewed) {
       Swal.fire('Atención', 'Debes generar y confirmar la vista previa antes de emitir la factura.', 'warning');
       return;

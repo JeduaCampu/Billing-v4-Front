@@ -9,7 +9,6 @@ import { AuthService } from '../../services/auth.service';
   standalone: false
 })
 export class LoginComponent {
-  // Objeto para capturar los datos del formulario (binding con el HTML)
   loginData = {
     email: '',
     password: ''
@@ -23,9 +22,6 @@ export class LoginComponent {
     private router: Router
   ) {}
 
-  /**
-   * Método que se dispara al dar clic en "SIGN IN"
-   */
   onLogin(): void {
     if (!this.loginData.email || !this.loginData.password) {
       this.errorMessage = 'Por favor, completa todos los campos.';
@@ -35,20 +31,15 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Consumimos el servicio que conecta con tu backend en el puerto 4002
     this.authService.login(this.loginData.email, this.loginData.password).subscribe({
       next: (res) => {
         this.isLoading = false;
         console.log('Login exitoso:', res.user.name);
-        
-        // Redirigimos al Dashboard inicial (Panel Principal)
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.isLoading = false;
         console.error('Error en login:', err);
-        
-        // Manejo básico de mensajes según el error del servidor
         if (err.status === 401) {
           this.errorMessage = 'Correo o contraseña incorrectos.';
         } else {

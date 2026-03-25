@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { BillingService } from '../../services/billing.service';
 import { Invoice, PaginationData } from '../../models/invoice.model';
-import Swal from 'sweetalert2'; // Importamos SweetAlert2
+import Swal from 'sweetalert2';
+import  {AuthService} from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-billing-list',
@@ -24,7 +25,8 @@ export class BillingListComponent implements OnInit {
 
   constructor(
     private billingService: BillingService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -45,7 +47,6 @@ export class BillingListComponent implements OnInit {
         this.isLoading = false;
         this.cdr.detectChanges();
 
-        // Alerta de Error con SweetAlert
         Swal.fire({
           icon: 'error',
           title: 'Error de conexión',
@@ -117,8 +118,6 @@ export class BillingListComponent implements OnInit {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-
-        // Cerramos el modal de carga (no necesitamos mensaje de éxito para descargas)
         Swal.close();
       },
       error: (err) => {
@@ -146,7 +145,6 @@ export class BillingListComponent implements OnInit {
 
     const emailDestino = invoice.Customer?.email || 'el cliente';
 
-    // Modal de confirmación antes de enviar
     Swal.fire({
       title: '¿Enviar por correo?',
       text: `Se enviará la factura a: ${emailDestino}`,
@@ -159,7 +157,6 @@ export class BillingListComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        // Modal de "Enviando..."
         Swal.fire({
           title: 'Enviando correo...',
           text: 'Conectando con el servidor de correo.',
@@ -171,7 +168,6 @@ export class BillingListComponent implements OnInit {
 
         this.billingService.sendInvoiceEmail(invoice.uuid).subscribe({
           next: (res) => {
-            // Alerta de Éxito
             Swal.fire({
               icon: 'success',
               title: '¡Enviado!',
@@ -181,7 +177,6 @@ export class BillingListComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error al enviar correo:', err);
-            // Alerta de Error
             Swal.fire({
               icon: 'error',
               title: 'Fallo en el Envío',
@@ -194,8 +189,6 @@ export class BillingListComponent implements OnInit {
     });
   }
 
-  // ... (tus importaciones y código existente) ...
-
   cancelInvoice(invoice: Invoice): void {
     if (!invoice.uuid) {
       Swal.fire({
@@ -207,7 +200,6 @@ export class BillingListComponent implements OnInit {
       return;
     }
 
-    // Usamos SweetAlert2 para recolectar el motivo de cancelación
     Swal.fire({
       title: 'Cancelar Factura',
       html: `
@@ -230,12 +222,11 @@ export class BillingListComponent implements OnInit {
         </div>
       `,
       showCancelButton: true,
-      confirmButtonColor: '#dc2626', // Rojo para acción destructiva
+      confirmButtonColor: '#dc2626',
       cancelButtonColor: '#64748b',
       confirmButtonText: 'Sí, Cancelar',
       cancelButtonText: 'Cerrar',
       didOpen: () => {
-        // Lógica para mostrar/ocultar el input de sustitución si eligen '01'
         const motiveSelect = document.getElementById('cancel-motive') as HTMLSelectElement;
         const subContainer = document.getElementById('substitution-container') as HTMLDivElement;
 
@@ -261,7 +252,6 @@ export class BillingListComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
 
-        // Mostrar "Cargando..."
         Swal.fire({
           title: 'Procesando cancelación...',
           text: 'Conectando con el PAC/SAT.',
@@ -270,7 +260,6 @@ export class BillingListComponent implements OnInit {
             Swal.showLoading();
           }
         });
-        // Llamar al servicio
         this.billingService.cancelInvoice(invoice.uuid, result.value.motive, result.value.substitutionUuid).subscribe({
           next: (res) => {
             Swal.fire({
@@ -279,7 +268,6 @@ export class BillingListComponent implements OnInit {
               text: 'La cancelación fue aceptada exitosamente.',
               confirmButtonColor: '#1e3a8a'
             }).then(() => {
-              // Se ejecuta al cerrar la alerta de éxito
               this.loadInvoices();
             });
           },

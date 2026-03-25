@@ -3,15 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './core/components/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './core/components/layout/main-layout.component';
+import { AccessDeniedComponent } from './core/components/access-denied/access-denied.component';
 
 const routes: Routes = [
-  // Ruta pública para el acceso
   { 
     path: 'login', 
     component: LoginComponent 
   },
-
-  // Rutas protegidas que utilizan el Layout principal (Sidebar + Navbar)
   {
     path: '',
     component: MainLayoutComponent,
@@ -29,7 +27,7 @@ const routes: Routes = [
         path: 'users', 
         loadChildren: () => import('./features/users/users.module').then(m => m.UsersModule) 
       },
-      // Redirección por defecto al entrar a la raíz de la app
+      { path: 'access-denied', component: AccessDeniedComponent },
       { 
         path: '', 
         redirectTo: 'dashboard', 
@@ -37,8 +35,6 @@ const routes: Routes = [
       }
     ]
   },
-
-  // Comodín para rutas no encontradas, redirige al login o podrías crear una página 404
   { 
     path: '**', 
     redirectTo: 'login' 

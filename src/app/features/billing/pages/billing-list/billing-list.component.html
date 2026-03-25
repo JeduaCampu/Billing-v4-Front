@@ -58,7 +58,7 @@
                             PDF
                         </button>
 
-                        <button class="btn-icon" title="Enviar por correo" [disabled]="inv.status !== 'valid'"
+                        <button class="btn-icon" *ngIf="authService.hasRole('admin')" title="Enviar por correo" [disabled]="inv.status !== 'valid'"
                             (click)="sendEmail(inv)">
                             Mail
                         </button>

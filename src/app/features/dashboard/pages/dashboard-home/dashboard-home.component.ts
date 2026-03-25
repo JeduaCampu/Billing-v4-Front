@@ -67,9 +67,6 @@ export class DashboardHomeComponent implements OnInit {
     this.applyFilters();
   }
 
-  /**
-   * Ejecuta ambas cargas en paralelo y detiene el loading al final
-   */
   applyFilters(): void {
     this.isLoading = true;
 
@@ -77,23 +74,23 @@ export class DashboardHomeComponent implements OnInit {
       summary: this.dashboardService.getDashboardSummary(this.filterStartDate, this.filterEndDate),
       trend: this.dashboardService.getRevenueTrend()
     })
-    .pipe(
-      finalize(() => {
-        this.zone.run(() => {
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        });
-      })
-    )
-    .subscribe({
-      next: (result) => {
-        this.processSummary(result.summary);
-        this.processTrend(result.trend);
-      },
-      error: (err) => {
-        console.error('Error al cargar datos del dashboard', err);
-      }
-    });
+      .pipe(
+        finalize(() => {
+          this.zone.run(() => {
+            this.isLoading = false;
+            this.cdr.detectChanges();
+          });
+        })
+      )
+      .subscribe({
+        next: (result) => {
+          this.processSummary(result.summary);
+          this.processTrend(result.trend);
+        },
+        error: (err) => {
+          console.error('Error al cargar datos del dashboard', err);
+        }
+      });
   }
 
   private processSummary(res: any): void {

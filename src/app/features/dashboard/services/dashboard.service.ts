@@ -36,7 +36,6 @@ export class DashboardService {
         if (startDate) params = params.set('startDate', startDate);
         if (endDate) params = params.set('endDate', endDate);
 
-        // MUY IMPORTANTE: Asegúrate de pasar los { headers, params }
         return this.http.get(`${this.apiUrl}/export`, { 
             headers, 
             params,

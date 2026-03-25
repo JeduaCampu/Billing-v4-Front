@@ -88,8 +88,6 @@ export class BillingService {
         if (token) {
             headers = headers.set('Authorization', `Bearer ${token}`);
         }
-
-        // Configurar el body para la petición DELETE
         const options = {
             headers: headers,
             body: {
@@ -107,7 +105,6 @@ export class BillingService {
         if (token) {
             headers = headers.set('Authorization', `Bearer ${token}`);
         }
-        // Ajusta la ruta si tu endpoint de clientes es diferente
         return this.http.get(`${this.apiUrl}/clients`, { headers });
     }
 }
