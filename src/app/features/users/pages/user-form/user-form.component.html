@@ -27,9 +27,14 @@
                 </div>
             </div>
 
-            <div class="form-group" *ngIf="isEditMode">
-                <label>Nueva Contraseña (Opcional)</label>
-                <input type="password" formControlName="password" placeholder="Deja en blanco para mantener la actual">
+            <div class="form-group">
+                <label>{{ isEditMode ? 'Nueva Contraseña (Opcional)' : 'Contraseña' }}</label>
+                <input type="password" formControlName="password"
+                    [placeholder]="isEditMode ? 'Deja en blanco para mantener la actual' : '********'">
+                <div class="error-msg"
+                    *ngIf="!isEditMode && userForm.get('password')?.invalid && userForm.get('password')?.touched">
+                    La contraseña es obligatoria para nuevos usuarios.
+                </div>
             </div>
 
             <div class="form-group">

@@ -10,8 +10,15 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     const savedUser = localStorage.getItem('billing_user');
-    if (savedUser) {
-      this.userSubject.next(JSON.parse(savedUser));
+    
+    // CORRECCIÓN: Validación segura antes de parsear
+    if (savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
+      try {
+        this.userSubject.next(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Error al recuperar sesión:", error);
+        this.logout(); // Si el dato está corrupto, mejor limpiar todo
+      }
     }
   }
 
@@ -24,18 +31,40 @@ export class AuthService {
 
     return this.http.post<any>(`${environment.apiUrl}/auth/token`, body).pipe(
       tap(res => {
-        localStorage.setItem('access_token', res.accessToken);
-        localStorage.setItem('refresh_token', res.refreshToken);
-        localStorage.setItem('billing_user', JSON.stringify(res.user));
-
-        this.userSubject.next(res.user);
+        // Solo guardamos datos si NO se requiere MFA
+        if (!res.mfaRequired) {
+          this.saveSession(res);
+        }
       })
     );
   }
 
+  // NUEVO: Método para verificar el código de 6 dígitos
+  verifyMfa(userId: string, token: string, tenantId: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/auth/verify-mfa`, {
+      userId,
+      token,
+      tenantId
+    }).pipe(
+      tap(res => {
+        // Aquí sí guardamos la sesión final
+        this.saveSession(res);
+      })
+    );
+  }
+
+  // Helper para no repetir código de guardado
+  private saveSession(res: any): void {
+    localStorage.setItem('access_token', res.accessToken);
+    localStorage.setItem('refresh_token', res.refreshToken);
+    localStorage.setItem('billing_user', JSON.stringify(res.user));
+    this.userSubject.next(res.user);
+  }
+
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('billing_user');
     this.userSubject.next(null);
   }
 
@@ -52,5 +81,4 @@ export class AuthService {
     const token = localStorage.getItem('access_token');
     return !!token;
   }
-
 }

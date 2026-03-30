@@ -19,11 +19,6 @@
                         <input type="text" formControlName="series" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Folio (Opcional)</label>
-                        <input type="text" formControlName="folio" class="form-control"
-                            placeholder="Automático si está vacío">
-                    </div>
-                    <div class="form-group">
                         <label>Moneda</label>
                         <select formControlName="currency" class="form-control">
                             <option value="MXN">MXN - Peso Mexicano</option>
@@ -81,9 +76,10 @@
                             <input type="text" formControlName="rfc" class="form-control"
                                 style="text-transform: uppercase;">
                         </div>
+
                         <div class="form-group">
                             <label>Régimen Fiscal</label>
-                            <select formControlName="taxRegime" class="form-control" [disabled]="!rfcType">
+                            <select formControlName="taxRegime" class="form-control">
                                 <option value="" disabled selected>
                                     {{ rfcType ? 'Seleccione...' : 'Capture un RFC válido primero' }}
                                 </option>
@@ -95,7 +91,7 @@
 
                         <div class="form-group">
                             <label>Uso CFDI</label>
-                            <select formControlName="cfdiUse" class="form-control" [disabled]="!rfcType">
+                            <select formControlName="cfdiUse" class="form-control">
                                 <option value="" disabled selected>
                                     {{ rfcType ? 'Seleccione...' : 'Capture un RFC válido primero' }}
                                 </option>
@@ -104,6 +100,7 @@
                                 </option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label>Correo Electrónico</label>
                             <input type="email" formControlName="email" class="form-control">
@@ -182,6 +179,10 @@
                             <div class="form-group">
                                 <label>Precio Unitario</label>
                                 <input type="number" formControlName="unitPrice" class="form-control">
+                                <div class="error-msg"
+                                    *ngIf="item.get('unitPrice')?.invalid && item.get('unitPrice')?.touched">
+                                    Mínimo $0.01
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Tasa IVA (Ej: 0.16)</label>

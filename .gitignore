@@ -54,3 +54,10 @@ src/environments/environment.prod.ts
 # Si llegas a usar archivos .env en el backend
 .env
 .env.local
+
+node_modules
+dist
+.angular
+.git
+.vscode
+notas.txt

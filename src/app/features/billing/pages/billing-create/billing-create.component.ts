@@ -94,47 +94,63 @@ export class BillingCreateComponent implements OnInit {
     this.billingService.getCustomers().subscribe({
       next: (res) => {
         this.customers = res.data || res;
+        this.cdr.detectChanges(); 
       },
       error: (err) => console.error('Error al cargar clientes', err)
     });
   }
 
   onCustomerSelect(event: any): void {
-    const customerId = event.target.value;
+  const customerId = event.target.value;
+  const customerGroup = this.invoiceForm.get('customer');
 
-    if (customerId === 'NEW' || !customerId) {
-      this.invoiceForm.get('customer')?.reset({
-        taxRegime: '603',
-        cfdiUse: 'G03',
-        address: { country: 'MEX' }
+  if (customerId === 'NEW' || !customerId) {
+    // 1. Resetear el grupo de cliente
+    customerGroup?.reset({
+      taxRegime: '603',
+      cfdiUse: 'G03',
+      address: { country: 'MEX' }
+    });
+
+    // 2. Deshabilitar campos dependientes (esto actualiza el DOM de inmediato)
+    customerGroup?.get('taxRegime')?.disable();
+    customerGroup?.get('cfdiUse')?.disable();
+
+  } else {
+    const selected = this.customers.find(c => c.id === customerId);
+    
+    if (selected) {
+      const address = selected.address || {};
+
+      // 3. Insertar los valores del cliente
+      customerGroup?.patchValue({
+        name: selected.legalName,
+        rfc: selected.taxId,
+        taxRegime: selected.taxSystem || '603',
+        email: selected.email,
+        cfdiUse: 'G03', 
+        address: {
+          street: address.street || '',
+          exterior: address.exterior || '',
+          interior: address.interior || '',
+          neighborhood: address.neighborhood || '',
+          zip: address.zip || selected.zipCode || '',
+          city: address.city || '',
+          municipality: address.municipality || '',
+          state: address.state || '',
+          country: address.country || 'MEX'
+        }
       });
-    } else {
-      const selected = this.customers.find(c => c.id === customerId);
-      
-      if (selected) {
-        const address = selected.address || {};
 
-        this.invoiceForm.get('customer')?.patchValue({
-          name: selected.legalName,
-          rfc: selected.taxId,
-          taxRegime: selected.taxSystem || '603',
-          email: selected.email,
-          cfdiUse: 'G03', 
-          address: {
-            street: address.street || '',
-            exterior: address.exterior || '',
-            interior: address.interior || '',
-            neighborhood: address.neighborhood || '',
-            zip: address.zip || selected.zipCode || '',
-            city: address.city || '',
-            municipality: address.municipality || '',
-            state: address.state || '',
-            country: address.country || 'MEX'
-          }
-        });
-      }
+      // 4. Habilitar campos dependientes DESPUÉS de hacer el patchValue
+      customerGroup?.get('taxRegime')?.enable();
+      customerGroup?.get('cfdiUse')?.enable();
     }
   }
+
+  // 5. Forzar a Angular a que repinte la pantalla ahora mismo
+  this.cdr.detectChanges();
+}
 
   initForm(): void {
     this.invoiceForm = this.fb.group({
@@ -256,7 +272,7 @@ export class BillingCreateComponent implements OnInit {
   createItemFormGroup(): FormGroup {
     return this.fb.group({
       quantity: [1, [Validators.required, Validators.min(0.01)]],
-      unitPrice: [0, [Validators.required, Validators.min(0)]],
+      unitPrice: [0, [Validators.required, Validators.min(0.01)]],
       description: ['', Validators.required],
       unitCode: ['E48', Validators.required],
       productKey: ['81112100', Validators.required],
