@@ -37,7 +37,7 @@
   }
 }
 
-.login-form {
+.login-form, .mfa-step {
   text-align: left;
 
   .form-group {
@@ -72,60 +72,126 @@
     }
   }
 
-  .input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    .form-control {
-      padding-right: 2.5rem;
-    }
-
-    .view-password {
-      position: absolute;
-      right: 8px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: var(--primary);
-      }
-    }
-  }
-
-  .error-message {
-    color: var(--error);
-    font-size: 0.75rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-
-  .form-actions {
-    text-align: center;
-    margin: 1.5rem 0;
-
-    .forgot-link {
-      color: var(--primary-light);
-      font-size: 0.8125rem;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  /* Extiende el diseño del botón pero mantiene el redondeo del mock */
   .btn-block {
     width: 100%;
     padding: 0.75rem;
     border-radius: 25px;
+    font-weight: 600;
+    transition: transform 0.1s ease, opacity 0.2s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Estilos específicos para el Segundo Factor (MFA) */
+.mfa-step {
+  text-align: center;
+
+  .mfa-header {
+    margin-bottom: 1.5rem;
+
+    .mfa-icon-wrapper {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .mfa-title {
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .mfa-description {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+
+  .mfa-input {
+    text-align: center;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6rem;
+    padding: 0.75rem !important;
+    color: var(--primary) !important;
+    height: auto;
+    
+    &::placeholder {
+      letter-spacing: normal;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+  }
+
+  .btn-back {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary-light);
+      text-decoration: underline;
+    }
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .form-control {
+    padding-right: 2.5rem;
+  }
+
+  .view-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+.form-actions {
+  text-align: center;
+  margin: 1.5rem 0;
+
+  .forgot-link {
+    color: var(--primary-light);
+    font-size: 0.8125rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -153,13 +219,4 @@
   right: 1.5rem;
   font-size: 0.75rem;
   color: var(--text-muted);
-}
-
-.view-password {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  cursor: pointer;
 }

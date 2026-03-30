@@ -10,7 +10,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     const savedUser = localStorage.getItem('billing_user');
-    
+
     // CORRECCIÓN: Validación segura antes de parsear
     if (savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
       try {
@@ -81,4 +81,35 @@ export class AuthService {
     const token = localStorage.getItem('access_token');
     return !!token;
   }
+
+  get2faSetup(): Observable<{ secret: string; qrCodeUrl: string }> {
+    console.log(`${environment.apiUrl}/auth/2fa/setup`);
+
+    return this.http.post<{ secret: string; qrCodeUrl: string }>(
+      `${environment.apiUrl}/auth/2fa/setup`,
+      {}
+    );
+  }
+
+  enable2fa(token: string): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/2fa/enable`,
+      { token }
+    );
+  }
+
+  get2faStatus(): Observable<{ enabled: boolean }> {
+    return this.http.get<{ enabled: boolean }>(`${environment.apiUrl}/auth/2fa/status`);
+  }
+
+  updateUserStatus(enabled: boolean): void {
+    const user = this.userSubject.value;
+
+    if (user) {
+      user.two_factor_enabled = enabled ? 1 : 0;
+      localStorage.setItem('billing_user', JSON.stringify(user));
+      this.userSubject.next({ ...user });
+    }
+  }
+
 }
