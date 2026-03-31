@@ -16,8 +16,18 @@ $border-color: #e2e8f0;
     margin-bottom: 2rem;
 
     .header-titles {
-      h1 { font-size: 1.75rem; font-weight: 700; color: $text-main; margin: 0; }
-      p { color: $text-muted; margin-top: 0.25rem; font-size: 0.95rem; }
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: $text-main;
+        margin: 0;
+      }
+
+      p {
+        color: $text-muted;
+        margin-top: 0.25rem;
+        font-size: 0.95rem;
+      }
     }
   }
 }
@@ -37,7 +47,12 @@ $border-color: #e2e8f0;
     justify-content: space-between;
     align-items: center;
 
-    h3 { margin: 0; font-size: 1.1rem; font-weight: 600; color: $text-main; }
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $text-main;
+    }
   }
 }
 
@@ -53,6 +68,7 @@ $border-color: #e2e8f0;
 
     thead {
       background: #f1f5f9;
+
       tr th {
         padding: 0.75rem 1.5rem;
         font-size: 0.75rem;
@@ -67,8 +83,13 @@ $border-color: #e2e8f0;
       border-bottom: 1px solid $border-color;
       transition: background 0.2s;
 
-      &:hover { background-color: #f8fafc; }
-      &:last-child { border-bottom: none; }
+      &:hover {
+        background-color: #f8fafc;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
 
       td {
         padding: 1rem 1.5rem;
@@ -76,7 +97,9 @@ $border-color: #e2e8f0;
         color: $text-main;
         vertical-align: middle;
 
-        &.font-bold { font-weight: 600; }
+        &.font-bold {
+          font-weight: 600;
+        }
       }
     }
   }
@@ -96,8 +119,15 @@ $border-color: #e2e8f0;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &:hover { background: darken($primary-color, 10%); transform: translateY(-1px); box-shadow: 0 4px 12px rgba($primary-color, 0.3); }
-  i { font-size: 1.25rem; }
+  &:hover {
+    // Reemplazo de darken()
+    background: $primary-color;
+    color: white;
+  }
+
+  i {
+    font-size: 1.25rem;
+  }
 }
 
 .role-text {
@@ -123,9 +153,25 @@ $border-color: #e2e8f0;
     display: flex;
     align-items: center;
 
-    i { font-size: 1.2rem; }
-    &.edit { color: $primary-color; &:hover { background: #eff6ff; } }
-    &.delete { color: #ef4444; &:hover { background: #fef2f2; } }
+    i {
+      font-size: 1.2rem;
+    }
+
+    &.edit {
+      color: $primary-color;
+
+      &:hover {
+        background: #eff6ff;
+      }
+    }
+
+    &.delete {
+      color: #ef4444;
+
+      &:hover {
+        background: #fef2f2;
+      }
+    }
   }
 }
 
@@ -142,7 +188,7 @@ $border-color: #e2e8f0;
   flex-direction: column;
   align-items: center;
   padding: 4rem;
-  
+
   .spinner {
     width: 40px;
     height: 40px;
@@ -154,51 +200,81 @@ $border-color: #e2e8f0;
   }
 }
 
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    animation: fadeIn 0.2s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-content {
-    background: white;
-    width: 90%;
-    max-width: 600px;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    animation: slideUp 0.3s ease-out;
-    max-height: 90vh;
-    overflow-y: auto;
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .close-x {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    border: none;
-    background: none;
-    font-size: 2rem;
-    color: #94a3b8;
-    cursor: pointer;
-    line-height: 1;
-    z-index: 10;
-    &:hover { color: #1e293b; }
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  border: none;
+  background: none;
+  font-size: 2rem;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+  z-index: 10;
+
+  &:hover {
+    color: #1e293b;
+  }
 }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 
 .modal-overlay {
   position: fixed;
@@ -207,7 +283,7 @@ $border-color: #e2e8f0;
   width: 100vw;
   height: 100vh;
   background: rgba(15, 23, 42, 0.65); // Fondo oscuro más profundo
-  backdrop-filter: blur(6px);       // Desenfoque pro
+  backdrop-filter: blur(6px); // Desenfoque pro
   display: flex;
   justify-content: center;
   align-items: center;
@@ -252,11 +328,23 @@ $border-color: #e2e8f0;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

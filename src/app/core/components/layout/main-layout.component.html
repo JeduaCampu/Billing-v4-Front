@@ -22,6 +22,11 @@
                         <span class="icon">👥</span> Usuarios
                     </a>
                 </li>
+                <li *ngIf="isAdmin">
+                    <a routerLink="/settings" routerLinkActive="active">
+                        <span class="icon">👥</span> Configuración
+                    </a>
+                </li>
             </ul>
         </nav>
 

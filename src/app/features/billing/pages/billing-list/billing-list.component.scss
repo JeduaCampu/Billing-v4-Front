@@ -96,7 +96,6 @@
 
         &:hover {
             background-color: #f8fafc;
-            /* Un gris muy sutil al pasar el mouse */
         }
     }
 }
@@ -109,7 +108,6 @@
     font-weight: 700;
     letter-spacing: 0.05em;
 
-    /* Clases dinámicas inyectadas por Angular según el JSON del backend */
     &.valid {
         background-color: #dcfce7;
         color: #166534;

@@ -4,6 +4,7 @@ import { LoginComponent } from './core/components/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './core/components/layout/main-layout.component';
 import { AccessDeniedComponent } from './core/components/access-denied/access-denied.component';
+import { TwoFactorSetupComponent } from './features/security/two-factor-setup/two-factor-setup.component';
 
 const routes: Routes = [
   { 
@@ -26,6 +27,10 @@ const routes: Routes = [
       { 
         path: 'users', 
         loadChildren: () => import('./features/users/users.module').then(m => m.UsersModule) 
+      },
+      { 
+        path: 'settings', 
+        component: TwoFactorSetupComponent
       },
       { path: 'access-denied', component: AccessDeniedComponent },
       { 

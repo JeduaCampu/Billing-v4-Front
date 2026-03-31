@@ -10,14 +10,13 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     const savedUser = localStorage.getItem('billing_user');
-    
-    // CORRECCIÓN: Validación segura antes de parsear
+
     if (savedUser && savedUser !== 'undefined' && savedUser !== 'null') {
       try {
         this.userSubject.next(JSON.parse(savedUser));
       } catch (error) {
         console.error("Error al recuperar sesión:", error);
-        this.logout(); // Si el dato está corrupto, mejor limpiar todo
+        this.logout();
       }
     }
   }
@@ -31,7 +30,6 @@ export class AuthService {
 
     return this.http.post<any>(`${environment.apiUrl}/auth/token`, body).pipe(
       tap(res => {
-        // Solo guardamos datos si NO se requiere MFA
         if (!res.mfaRequired) {
           this.saveSession(res);
         }
@@ -39,7 +37,6 @@ export class AuthService {
     );
   }
 
-  // NUEVO: Método para verificar el código de 6 dígitos
   verifyMfa(userId: string, token: string, tenantId: string): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/auth/verify-mfa`, {
       userId,
@@ -47,13 +44,11 @@ export class AuthService {
       tenantId
     }).pipe(
       tap(res => {
-        // Aquí sí guardamos la sesión final
         this.saveSession(res);
       })
     );
   }
 
-  // Helper para no repetir código de guardado
   private saveSession(res: any): void {
     localStorage.setItem('access_token', res.accessToken);
     localStorage.setItem('refresh_token', res.refreshToken);
@@ -80,5 +75,43 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = localStorage.getItem('access_token');
     return !!token;
+  }
+
+  // --- MÉTODOS 2FA ---
+
+  get2faSetup(): Observable<{ secret: string; qrCodeUrl: string }> {
+    return this.http.post<{ secret: string; qrCodeUrl: string }>(
+      `${environment.apiUrl}/auth/2fa/setup`,
+      {}
+    );
+  }
+
+  enable2fa(token: string): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/2fa/enable`,
+      { token }
+    );
+  }
+
+  // NUEVO: Método para desactivar el 2FA
+  disable2fa(): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/auth/2fa/disable`,
+      {}
+    );
+  }
+
+  get2faStatus(): Observable<{ enabled: boolean }> {
+    return this.http.get<{ enabled: boolean }>(`${environment.apiUrl}/auth/2fa/status`);
+  }
+
+  updateUserStatus(enabled: boolean): void {
+    const user = this.userSubject.value;
+
+    if (user) {
+      user.two_factor_enabled = enabled ? 1 : 0;
+      localStorage.setItem('billing_user', JSON.stringify(user));
+      this.userSubject.next({ ...user });
+    }
   }
 }
