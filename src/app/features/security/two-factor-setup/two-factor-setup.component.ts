@@ -13,13 +13,14 @@ export class TwoFactorSetupComponent implements OnInit, OnDestroy {
   // Estados de la UI
   qrCodeUrl: string = '';
   verificationToken: string = '';
-  
+
   // Spinners de carga
-  isLoading: boolean = false;       // Generación de QR
-  isEnabling: boolean = false;      // Proceso de activación
-  isLoadingStatus: boolean = true;  // Verificación inicial al cargar componente
+  isLoading: boolean = false;
+  isEnabling: boolean = false;
+  isLoadingStatus: boolean = true;
 
   twoFactorEnabled: boolean = false;
+  isDisabling: boolean = false;
   private userSub!: Subscription;
 
   constructor(
@@ -28,13 +29,10 @@ export class TwoFactorSetupComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // 1. Suscripción al estado local del usuario
     this.userSub = this.authService.user$.subscribe(user => {
       this.twoFactorEnabled = user?.two_factor_enabled || false;
       this.cdr.detectChanges();
     });
-
-    // 2. Verificación de "Verdad Única" contra el Backend
     this.checkCurrent2FAStatus();
   }
 
@@ -46,12 +44,11 @@ export class TwoFactorSetupComponent implements OnInit, OnDestroy {
     this.authService.get2faStatus().subscribe({
       next: (res) => {
         this.twoFactorEnabled = res.enabled;
-        
-        // Sincronizamos el servicio por si el localStorage estaba desfasado
+
         if (this.authService.updateUserStatus) {
           this.authService.updateUserStatus(res.enabled);
         }
-        
+
         this.isLoadingStatus = false;
         this.cdr.detectChanges();
       },
@@ -105,7 +102,6 @@ export class TwoFactorSetupComponent implements OnInit, OnDestroy {
         this.qrCodeUrl = '';
         this.verificationToken = '';
 
-        // Actualizamos el estado global del usuario en el AuthService
         if (this.authService.updateUserStatus) {
           this.authService.updateUserStatus(true);
         }
@@ -137,4 +133,46 @@ export class TwoFactorSetupComponent implements OnInit, OnDestroy {
       this.userSub.unsubscribe();
     }
   }
+
+  onDisable2FA(): void {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: "Tu cuenta será menos segura sin el Segundo Factor.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc2626',
+    cancelButtonColor: '#6b7280',
+    confirmButtonText: 'Sí, desactivar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isDisabling = true;
+      this.cdr.detectChanges();
+
+      this.authService.disable2fa().subscribe({
+        next: () => {
+          this.twoFactorEnabled = false;
+          this.qrCodeUrl = '';
+          this.verificationToken = '';
+          this.isDisabling = false;
+
+          this.authService.updateUserStatus(false);
+          this.cdr.detectChanges();
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Desactivado',
+            text: 'El 2FA ha sido removido de tu cuenta.',
+            confirmButtonColor: '#1e3a8a'
+          });
+        },
+        error: (err) => {
+          this.isDisabling = false;
+          this.cdr.detectChanges();
+          Swal.fire('Error', 'No se pudo desactivar el 2FA.', 'error');
+        }
+      });
+    }
+  });
+}
 }

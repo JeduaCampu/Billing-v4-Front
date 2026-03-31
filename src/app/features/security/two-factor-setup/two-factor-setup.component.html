@@ -1,14 +1,12 @@
 <div class="security-container">
-    <div class="header-section mb-4">
+    <div class="header-section">
         <h2 class="title">Configuración de Seguridad</h2>
         <p class="subtitle">Administra las capas de protección de tu cuenta personal para mantener tus datos a salvo.
         </p>
     </div>
 
-    <div *ngIf="isLoadingStatus" class="loading-overlay text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-        </div>
+    <div *ngIf="isLoadingStatus" class="loading-overlay">
+        <div class="spinner-border text-primary" role="status"></div>
         <p class="text-muted mt-2">Verificando estado de tu cuenta...</p>
     </div>
 
@@ -34,9 +32,9 @@
             <hr class="divider">
 
             <div class="action-area" *ngIf="!twoFactorEnabled && !qrCodeUrl">
-                <div class="promo-box mb-3">
-                    <p class="small text-muted">Recomendamos usar aplicaciones como <strong>Google
-                            Authenticator</strong> o <strong>Authy</strong>.</p>
+                <div class="promo-box">
+                    <p>Recomendamos usar aplicaciones como <strong>Google Authenticator</strong> o
+                        <strong>Authy</strong>.</p>
                 </div>
                 <button class="btn-setup" (click)="onStartSetup()" [disabled]="isLoading">
                     <span *ngIf="!isLoading">Configurar Doble Factor</span>
@@ -45,29 +43,28 @@
             </div>
 
             <div class="qr-flow fade-in" *ngIf="qrCodeUrl && !twoFactorEnabled">
-
                 <div class="instruction-box">
                     <div class="step">
                         <span class="number">1</span>
-                        <p>Escanea este código QR con la cámara de tu aplicación de autenticación:</p>
+                        <p>Escanea este código QR con tu aplicación:</p>
                     </div>
-                    <div class="qr-container text-center">
-                        <img [src]="qrCodeUrl" alt="MFA QR Code" class="img-fluid">
+                    <div class="qr-container">
+                        <img [src]="qrCodeUrl" alt="MFA QR Code">
                     </div>
                 </div>
 
                 <div class="instruction-box mt-4">
                     <div class="step">
                         <span class="number">2</span>
-                        <p>Ingresa el código de 6 dígitos que aparece en tu celular para confirmar:</p>
+                        <p>Ingresa el código de 6 dígitos para confirmar:</p>
                     </div>
 
                     <div class="verify-group">
                         <input type="text" [(ngModel)]="verificationToken" class="form-control code-input"
-                            placeholder="000 000" maxlength="6" autocomplete="one-time-code"
-                            (keyup.enter)="onConfirmActivation()" [disabled]="isEnabling">
+                            placeholder="000 000" maxlength="6" (keyup.enter)="onConfirmActivation()"
+                            [disabled]="isEnabling">
 
-                        <div class="btn-group-actions mt-3">
+                        <div class="btn-group-actions">
                             <button type="button" class="btn-cancel" (click)="qrCodeUrl = ''" [disabled]="isEnabling">
                                 Cancelar
                             </button>
@@ -83,25 +80,27 @@
 
             <div class="active-msg fade-in" *ngIf="twoFactorEnabled">
                 <div class="check-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                 </div>
-                <div class="msg-text">
-                    <strong>¡Tu cuenta está protegida!</strong>
-                    <p>La autenticación de dos pasos está activa. Se te solicitará un código cada vez que inicies sesión
-                        en un dispositivo nuevo.</p>
+                <div class="msg-content">
+                    <div class="msg-text">
+                        <strong>¡Tu cuenta está protegida!</strong>
+                        <p>La autenticación de dos pasos está activa correctamente.</p>
+                    </div>
+                    <button class="btn-disable" (click)="onDisable2FA()" [disabled]="isDisabling">
+                        <span *ngIf="!isDisabling">Desactivar 2FA</span>
+                        <span *ngIf="isDisabling">Procesando...</span>
+                    </button>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <div class="security-footer mt-3 text-center">
-        <p class="text-muted small">
-            ¿Tienes problemas? <a href="javascript:void(0)" class="text-primary">Contacta a soporte técnico</a>
-        </p>
+    <div class="security-footer mt-4">
+        <p>¿Tienes problemas? <a href="javascript:void(0)">Contacta a soporte técnico</a></p>
     </div>
 </div>
