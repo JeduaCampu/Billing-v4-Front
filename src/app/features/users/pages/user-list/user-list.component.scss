@@ -121,10 +121,8 @@ $border-color: #e2e8f0;
 
   &:hover {
     // Reemplazo de darken()
-    background: color.adjust($primary-color, $lightness: -10%);
-
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+    background: $primary-color;
+    color: white;
   }
 
   i {
