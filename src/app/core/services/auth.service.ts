@@ -49,6 +49,18 @@ export class AuthService {
     );
   }
 
+  verifyEmailMfa(userId: string, token: string, tenantId: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/auth/verify-email-mfa`, {
+      userId,
+      token,
+      tenantId
+    }).pipe(
+      tap(res => {
+        this.saveSession(res);
+      })
+    );
+  }
+
   private saveSession(res: any): void {
     localStorage.setItem('access_token', res.accessToken);
     localStorage.setItem('refresh_token', res.refreshToken);

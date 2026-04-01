@@ -16,9 +16,11 @@ export class LoginComponent {
     password: ''
   };
 
-  // Variables para el flujo de 2FA (MFA)
+  // Variables para el flujo de MFA
   showMfa: boolean = false;
+  mfaType: 'TOTP' | 'EMAIL' = 'TOTP';
   mfaCode: string = '';
+
   private tempUserId: string = '';
   private tempTenantId: string = '';
 
@@ -44,30 +46,34 @@ export class LoginComponent {
    */
   onLogin(): void {
     if (!this.loginData.email || !this.loginData.password) {
-      this.showWarning('Campos incompletos', 'Por favor, completa todos los campos para continuar.');
+      this.showWarning('Campos incompletos', 'Por favor, completa todos los campos.');
       return;
     }
 
     this.isLoading = true;
-    this.cdr.detectChanges();
+    this.cdr.detectChanges(); // Para que aparezca el "Cargando..."
 
     this.authService.login(this.loginData.email, this.loginData.password).subscribe({
       next: (res) => {
+        // 1. Apagamos el spinner lo primero
         this.isLoading = false;
-        
+
         if (res.mfaRequired) {
-          // El usuario tiene 2FA activo. Cambiamos a la vista de verificación.
+          // 2. Activamos la vista de MFA y guardamos el tipo
           this.showMfa = true;
+          this.mfaType = res.mfaType; // ¡Importante para los textos dinámicos!
           this.tempUserId = res.userId;
           this.tempTenantId = res.tenantId;
+
+          // 3. Forzamos a Angular a que pinte la nueva pantalla
           this.cdr.detectChanges();
         } else {
-          // Login exitoso directo (la sesión se guarda en el interceptor/servicio)
           this.router.navigate(['/dashboard']);
         }
       },
       error: (err) => {
         this.isLoading = false;
+        this.cdr.detectChanges();
         this.handleAuthError(err);
       }
     });
@@ -75,6 +81,7 @@ export class LoginComponent {
 
   /**
    * Paso 2: Verificación del código de 6 dígitos (MFA)
+   * Decide dinámicamente qué método del servicio llamar según el mfaType
    */
   onVerifyMfa(): void {
     if (this.mfaCode.length !== 6) return;
@@ -82,7 +89,12 @@ export class LoginComponent {
     this.isLoading = true;
     this.cdr.detectChanges();
 
-    this.authService.verifyMfa(this.tempUserId, this.mfaCode, this.tempTenantId).subscribe({
+    // Seleccionamos el flujo de verificación según el tipo que devolvió el login
+    const verify$ = (this.mfaType === 'EMAIL')
+      ? this.authService.verifyEmailMfa(this.tempUserId, this.mfaCode, this.tempTenantId)
+      : this.authService.verifyMfa(this.tempUserId, this.mfaCode, this.tempTenantId);
+
+    verify$.subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
@@ -118,7 +130,6 @@ export class LoginComponent {
     let title = 'Error';
     let message = 'Hubo un problema de conexión con el servidor.';
 
-    // Manejo de códigos de estado específicos del Backend
     switch (err.status) {
       case 429:
         title = 'Cuenta Bloqueada';
@@ -131,6 +142,10 @@ export class LoginComponent {
       case 403:
         title = 'Sin Permisos';
         message = 'El usuario no pertenece a esta organización.';
+        break;
+      case 400:
+        title = 'Solicitud Inválida';
+        message = err.error?.message || 'Datos de verificación incorrectos.';
         break;
       case 0:
         title = 'Sin Conexión';
