@@ -105,14 +105,12 @@ export class BillingCreateComponent implements OnInit {
   const customerGroup = this.invoiceForm.get('customer');
 
   if (customerId === 'NEW' || !customerId) {
-    // 1. Resetear el grupo de cliente
     customerGroup?.reset({
       taxRegime: '603',
       cfdiUse: 'G03',
       address: { country: 'MEX' }
     });
 
-    // 2. Deshabilitar campos dependientes (esto actualiza el DOM de inmediato)
     customerGroup?.get('taxRegime')?.disable();
     customerGroup?.get('cfdiUse')?.disable();
 
@@ -122,7 +120,6 @@ export class BillingCreateComponent implements OnInit {
     if (selected) {
       const address = selected.address || {};
 
-      // 3. Insertar los valores del cliente
       customerGroup?.patchValue({
         name: selected.legalName,
         rfc: selected.taxId,
@@ -142,13 +139,11 @@ export class BillingCreateComponent implements OnInit {
         }
       });
 
-      // 4. Habilitar campos dependientes DESPUÉS de hacer el patchValue
       customerGroup?.get('taxRegime')?.enable();
       customerGroup?.get('cfdiUse')?.enable();
     }
   }
 
-  // 5. Forzar a Angular a que repinte la pantalla ahora mismo
   this.cdr.detectChanges();
 }
 
@@ -199,8 +194,7 @@ export class BillingCreateComponent implements OnInit {
       Swal.fire({
         icon: 'warning',
         title: 'Formulario incompleto',
-        text: 'Por favor, completa todos los campos requeridos para generar la vista previa.',
-        confirmButtonColor: '#1e3a8a'
+        text: 'Por favor, completa todos los campos requeridos para generar la vista previa.'
       });
       this.invoiceForm.markAllAsTouched();
       return;
@@ -234,8 +228,6 @@ export class BillingCreateComponent implements OnInit {
             showCancelButton: true,
             confirmButtonText: 'Todo correcto, habilitar emisión',
             cancelButtonText: 'Necesito modificar datos',
-            confirmButtonColor: '#16a34a',
-            cancelButtonColor: '#64748b',
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
@@ -262,8 +254,7 @@ export class BillingCreateComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'No se pudo generar la vista previa. Revisa la consola o intenta nuevamente.',
-          confirmButtonColor: '#1e3a8a'
+          text: 'No se pudo generar la vista previa. Revisa la consola o intenta nuevamente.'
         });
       }
     });
@@ -306,8 +297,7 @@ export class BillingCreateComponent implements OnInit {
       Swal.fire({
         icon: 'warning',
         title: 'Formulario incompleto',
-        text: 'Por favor, completa todos los campos requeridos correctamente.',
-        confirmButtonColor: '#1e3a8a'
+        text: 'Por favor, completa todos los campos requeridos correctamente.'
       });
       this.invoiceForm.markAllAsTouched();
       return;
@@ -333,8 +323,7 @@ export class BillingCreateComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Factura Creada',
-          text: 'La factura se procesó correctamente.',
-          confirmButtonColor: '#1e3a8a'
+          text: 'La factura se procesó correctamente.'
         }).then(() => {
           this.closeModal.emit(true);
         });
@@ -345,8 +334,7 @@ export class BillingCreateComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: err.error?.message || 'No se pudo crear la factura.',
-          confirmButtonColor: '#1e3a8a'
+          text: err.error?.message || 'No se pudo crear la factura.'
         });
       }
     });

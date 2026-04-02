@@ -1,16 +1,17 @@
-<div class="security-container">
-    <div class="header-section">
-        <h2 class="title">Configuración de Seguridad</h2>
-        <p class="subtitle">Administra las capas de protección de tu cuenta personal para mantener tus datos a salvo.
-        </p>
-    </div>
+<div class="security-page">
+    <header class="page-header">
+        <div class="header-info">
+            <h1>Configuración de Seguridad</h1>
+            <p>Administra las capas de protección de tu cuenta personal para mantener tus datos a salvo.</p>
+        </div>
+    </header>
 
     <div *ngIf="isLoadingStatus" class="loading-overlay">
-        <div class="spinner-border text-primary" role="status"></div>
-        <p class="text-muted mt-2">Verificando estado de tu cuenta...</p>
+        <div class="spinner"></div>
+        <p>Verificando estado de tu cuenta...</p>
     </div>
 
-    <div class="security-card" *ngIf="!isLoadingStatus">
+    <div class="card" *ngIf="!isLoadingStatus">
         <div class="card-main-content">
 
             <div class="info-row">
@@ -21,12 +22,12 @@
                     </svg>
                 </div>
                 <div class="text-group">
-                    <h3>Autenticación de Dos Pasos (2FA)</h3>
+                    <h2>Autenticación de Dos Pasos (2FA)</h2>
                     <p>Añade una capa extra de seguridad solicitando un código de tu celular al iniciar sesión.</p>
                 </div>
-                <div class="status-badge" [class.active]="twoFactorEnabled">
+                <span class="badge" [ngClass]="twoFactorEnabled ? 'badge-success' : 'badge-warning'">
                     {{ twoFactorEnabled ? 'Activado' : 'Desactivado' }}
-                </div>
+                </span>
             </div>
 
             <hr class="divider">
@@ -36,7 +37,8 @@
                     <p>Recomendamos usar aplicaciones como <strong>Google Authenticator</strong> o
                         <strong>Authy</strong>.</p>
                 </div>
-                <button class="btn-setup" (click)="onStartSetup()" [disabled]="isLoading">
+                <button class="btn btn-primary" (click)="onStartSetup()" [disabled]="isLoading">
+                    <span class="icon" *ngIf="!isLoading">🛡️</span>
                     <span *ngIf="!isLoading">Configurar Doble Factor</span>
                     <span *ngIf="isLoading">Generando código QR...</span>
                 </button>
@@ -60,15 +62,15 @@
                     </div>
 
                     <div class="verify-group">
-                        <input type="text" [(ngModel)]="verificationToken" class="form-control code-input"
+                        <input type="text" [(ngModel)]="verificationToken" class="input-minimal code-input text-center"
                             placeholder="000 000" maxlength="6" (keyup.enter)="onConfirmActivation()"
                             [disabled]="isEnabling">
 
                         <div class="btn-group-actions">
-                            <button type="button" class="btn-cancel" (click)="qrCodeUrl = ''" [disabled]="isEnabling">
+                            <button type="button" class="btn btn-outline" (click)="qrCodeUrl = ''" [disabled]="isEnabling">
                                 Cancelar
                             </button>
-                            <button type="button" class="btn-activate"
+                            <button type="button" class="btn btn-primary"
                                 [disabled]="verificationToken.length < 6 || isEnabling" (click)="onConfirmActivation()">
                                 <span *ngIf="!isEnabling">Activar ahora</span>
                                 <span *ngIf="isEnabling">Validando...</span>
@@ -79,18 +81,16 @@
             </div>
 
             <div class="active-msg fade-in" *ngIf="twoFactorEnabled">
-                <div class="check-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                <div class="success-icon-wrapper">
+                    <span class="icon">✅</span>
                 </div>
                 <div class="msg-content">
                     <div class="msg-text">
-                        <strong>¡Tu cuenta está protegida!</strong>
+                        <h3>¡Tu cuenta está protegida!</h3>
                         <p>La autenticación de dos pasos está activa correctamente.</p>
                     </div>
-                    <button class="btn-disable" (click)="onDisable2FA()" [disabled]="isDisabling">
+                    <button class="btn-disable-2fa" (click)="onDisable2FA()" [disabled]="isDisabling">
+                        <span class="icon" *ngIf="!isDisabling">🔓</span>
                         <span *ngIf="!isDisabling">Desactivar 2FA</span>
                         <span *ngIf="isDisabling">Procesando...</span>
                     </button>
@@ -101,6 +101,6 @@
     </div>
 
     <div class="security-footer mt-4">
-        <p>¿Tienes problemas? <a href="javascript:void(0)">Contacta a soporte técnico</a></p>
+        <p class="text-muted">¿Tienes problemas? <a href="javascript:void(0)">Contacta a soporte técnico</a></p>
     </div>
 </div>

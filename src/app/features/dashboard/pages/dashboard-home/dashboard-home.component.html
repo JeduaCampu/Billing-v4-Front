@@ -5,7 +5,8 @@
       <p>Resumen general de facturación y actividad.</p>
     </div>
 
-    <button class="btn-export" (click)="exportReport()" [disabled]="isExporting">
+    <button class="btn btn-primary" (click)="exportReport()" [disabled]="isExporting">
+      <span class="icon" *ngIf="!isExporting">📥</span>
       <span *ngIf="!isExporting">Descargar Reporte (CSV)</span>
       <span *ngIf="isExporting">Generando...</span>
     </button>
@@ -15,17 +16,17 @@
     <div class="filter-group">
       <div class="field">
         <label>Desde:</label>
-        <input type="date" [(ngModel)]="filterStartDate" class="form-control" (change)="applyFilters()">
+        <input type="date" [(ngModel)]="filterStartDate" class="input-minimal" (change)="applyFilters()">
       </div>
 
       <div class="field">
         <label>Hasta:</label>
-        <input type="date" [(ngModel)]="filterEndDate" class="form-control" (change)="applyFilters()">
+        <input type="date" [(ngModel)]="filterEndDate" class="input-minimal" (change)="applyFilters()">
       </div>
     </div>
 
     <div class="filter-info">
-      <i class="material-icons">info</i>
+      <span class="icon">ℹ️</span>
       <span>Filtrando datos por periodo seleccionado</span>
     </div>
   </div>
@@ -61,8 +62,8 @@
           <button class="btn-text" routerLink="/billing">Ver todas</button>
         </div>
 
-        <div class="table-responsive">
-          <table>
+        <div class="table-container">
+          <table class="custom-table">
             <thead>
               <tr>
                 <th>Folio</th>
@@ -84,7 +85,11 @@
                 <td>{{ inv.date | date:'dd/MM/yyyy' }}</td>
                 <td>{{ inv.total | currency:'MXN':'symbol' }}</td>
                 <td>
-                  <span class="status-badge" [ngClass]="inv.status.toLowerCase()">
+                  <span class="badge" [ngClass]="{
+                    'badge-success': inv.status.toLowerCase() === 'pagada' || inv.status.toLowerCase() === 'paid',
+                    'badge-warning': inv.status.toLowerCase() === 'pendiente' || inv.status.toLowerCase() === 'pending',
+                    'badge-danger': inv.status.toLowerCase() === 'cancelada' || inv.status.toLowerCase() === 'canceled'
+                  }">
                     {{ inv.status | uppercase }}
                   </span>
                 </td>

@@ -1,0 +1,43 @@
+@use 'colors' as *;
+
+$primary: #3f51b5;
+$secondary: #ff4081;
+$success: #28a745;
+$danger: #dc3545;
+$warning: #ffc107;
+$info: #17a2b8;
+
+// Escala de Grises
+$white: #ffffff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-900: #212529;
+$black: #000000;
+
+// Tipografía
+$font-family-base: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+$font-size-base: 1rem; // 16px
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// Espaciados
+$spacer: 1rem;
+
+// Breakpoints (Puntos de quiebre para Responsive)
+$breakpoints: (
+  'xs': 0,
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px
+);
+
+// Z-index (Para manejar capas)
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-modal: 1050;
+$z-index-popover: 1060;

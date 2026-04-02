@@ -1,0 +1,107 @@
+@use 'colors' as *;
+@use 'variables' as vars;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  @extend .btn;
+  background: $primary-cyan;
+  color: $white;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba($primary-cyan, 0.4);
+  }
+}
+
+.btn-outline {
+  @extend .btn;
+  background: transparent;
+  border: 1px solid vars.$gray-300;
+  color: $primary-dark;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    border-color: $primary-cyan;
+    color: $primary-cyan;
+    background-color: rgba($primary-cyan, 0.05);
+  }
+}
+
+.btn-sm {
+  padding: 6px 12px !important;
+  font-size: 0.85rem !important;
+}
+
+.btn-icon {
+  @extend .btn;
+  background: transparent;
+  font-size: 1.15rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+
+  &:hover:not(:disabled) {
+    background-color: vars.$gray-100;
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    filter: grayscale(100%);
+  }
+
+  &.cancel-btn:hover:not(:disabled) {
+    background-color: rgba(vars.$danger, 0.1);
+  }
+}
+
+.btn-remove {
+  @extend .btn;
+  background: rgba(vars.$danger, 0.08);
+  color: vars.$danger;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    background: vars.$danger;
+    color: $white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(vars.$danger, 0.25);
+  }
+}
+
+.btn-action {
+  background: transparent;
+  border: 1px solid rgba($primary-dark, 0.1);
+  border-radius: 6px;
+  color: $primary-dark;
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  
+  &:hover {
+    background: $primary-cyan;
+    color: white;
+    border-color: $primary-cyan;
+  }
+}

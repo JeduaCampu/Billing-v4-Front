@@ -1,16 +1,16 @@
-<div class="users-container">
+<div class="users-page">
     <header class="page-header">
         <div class="header-titles">
             <h1>Gestión de Usuarios</h1>
             <p>Administra los accesos y permisos de tu organización.</p>
         </div>
 
-        <button class="btn-primary" (click)="openModal()">
-            <span> + Nuevo Usuario</span>
+        <button class="btn btn-primary" (click)="openModal()">
+            <span class="icon">➕</span> Nuevo Usuario
         </button>
     </header>
 
-    <div class="card card-table">
+    <div class="card-table">
         <div class="table-header">
             <h3>Usuarios Registrados</h3>
         </div>
@@ -20,8 +20,8 @@
             <p>Cargando usuarios...</p>
         </div>
 
-        <div class="table-responsive" *ngIf="!isLoading">
-            <table>
+        <div class="table-container" *ngIf="!isLoading">
+            <table class="custom-table">
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -33,25 +33,25 @@
                 </thead>
                 <tbody>
                     <tr *ngIf="users.length === 0">
-                        <td colspan="5" class="empty-row">No hay usuarios registrados en este tenant.</td>
+                        <td colspan="5" class="empty-state text-center">No hay usuarios registrados en este tenant.</td>
                     </tr>
 
                     <tr *ngFor="let user of users">
                         <td class="font-bold">{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>
-                            <span class="role-text" *ngIf="user.role">
+                            <span class="badge badge-info" *ngIf="user.role">
                                 {{ user.role.name | titlecase }}
                             </span>
                             <span class="text-muted" *ngIf="!user.role">Sin rol</span>
                         </td>
                         <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
-                        <td class="actions-cell">
-                            <button class="btn-icon edit" (click)="openModal(user.id)" title="Editar">
-                                <i class="material-icons">edit</i>
+                        <td class="actions text-center">
+                            <button class="btn-icon" (click)="openModal(user.id)" data-tooltip="Editar Usuario">
+                                ✏️
                             </button>
-                            <button class="btn-icon delete" (click)="deleteUser(user.id)" title="Eliminar">
-                                <i class="material-icons">delete</i>
+                            <button class="btn-icon cancel-btn" (click)="deleteUser(user.id)" data-tooltip="Eliminar Usuario">
+                                ❌
                             </button>
                         </td>
                     </tr>
@@ -62,10 +62,17 @@
 </div>
 
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal(false)">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-        <button class="close-x" (click)="closeModal(false)">&times;</button>
-
-        <app-user-form [userId]="selectedUserId" (onClose)="closeModal($event)">
-        </app-user-form>
+    <div class="custom-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div class="header-content">
+                <h2>{{ selectedUserId ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+                <p>Configura los datos de acceso y rol del usuario.</p>
+            </div>
+            <button class="btn-close" (click)="closeModal(false)">✖</button>
+        </div>
+        
+        <div class="modal-body">
+            <app-user-form [userId]="selectedUserId" (onClose)="closeModal($event)"></app-user-form>
+        </div>
     </div>
 </div>

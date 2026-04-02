@@ -1,5 +1,5 @@
 <div class="login-page">
-  <div class="login-card">
+  <div class="login-card card">
     <div class="login-header">
       <span class="welcome-text">Hello on board!</span>
       <h1 class="login-title">LOGIN</h1>
@@ -8,18 +8,18 @@
     <form class="login-form" *ngIf="!showMfa" (submit)="$event.preventDefault()">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" [(ngModel)]="loginData.email" class="form-control"
+        <input type="email" id="email" name="email" [(ngModel)]="loginData.email" class="input-minimal"
           placeholder="you@email.com" autocomplete="email" [disabled]="isLoading">
       </div>
 
       <div class="form-group">
         <label for="password">Password</label>
-        <div class="input-wrapper">
+        <div class="password-wrapper">
           <input [type]="showPassword ? 'text' : 'password'" id="password" name="password"
-            [(ngModel)]="loginData.password" class="form-control" placeholder="••••••••" autocomplete="current-password"
+            [(ngModel)]="loginData.password" class="input-minimal" placeholder="••••••••" autocomplete="current-password"
             [disabled]="isLoading">
 
-          <button type="button" class="view-password" (click)="togglePassword()">
+          <span class="toggle-password" (click)="togglePassword()" data-tooltip="Mostrar/Ocultar contraseña">
             <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -32,7 +32,7 @@
               </path>
               <line x1="1" y1="1" x2="23" y2="23"></line>
             </svg>
-          </button>
+          </span>
         </div>
       </div>
 
@@ -64,7 +64,7 @@
       </div>
 
       <div class="form-group text-center">
-        <input type="text" name="mfaCode" [(ngModel)]="mfaCode" class="form-control mfa-input" placeholder="000000"
+        <input type="text" name="mfaCode" [(ngModel)]="mfaCode" class="input-minimal mfa-input" placeholder="000000"
           maxlength="6" autocomplete="one-time-code" [disabled]="isLoading" (keyup.enter)="onVerifyMfa()">
         <p class="expiration-warning">
           <small>⚠️ El código expira en 2 minutos.</small>
@@ -96,7 +96,7 @@
       </div>
 
       <div class="form-group text-center">
-        <input type="text" name="mfaCode" [(ngModel)]="mfaCode" class="form-control mfa-input" placeholder="000000"
+        <input type="text" name="mfaCode" [(ngModel)]="mfaCode" class="input-minimal mfa-input" placeholder="000000"
           maxlength="6" autocomplete="one-time-code" [disabled]="isLoading" (keyup.enter)="onVerifyMfa()">
       </div>
 

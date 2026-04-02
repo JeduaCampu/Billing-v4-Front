@@ -1,14 +1,14 @@
 <div class="admin-layout">
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <h2 style="color: white;">Billing <span>v4</span></h2>
+            <h2>Billing <span>V4</span></h2>
         </div>
 
         <nav class="sidebar-nav">
             <ul>
                 <li>
                     <a routerLink="/dashboard" routerLinkActive="active">
-                        Panel Principal
+                        <span class="icon">🏠</span> Panel Principal
                     </a>
                 </li>
                 <li>
@@ -19,12 +19,12 @@
 
                 <li *ngIf="isAdmin">
                     <a routerLink="/users" routerLinkActive="active">
-                        <span class="icon">👥</span> Usuarios
+                    <span class="icon">👤</span> Usuarios
                     </a>
                 </li>
                 <li *ngIf="isAdmin">
                     <a routerLink="/settings" routerLinkActive="active">
-                        <span class="icon">👥</span> Configuración
+                    <span class="icon">⚙️</span> Configuración
                     </a>
                 </li>
             </ul>
@@ -32,15 +32,23 @@
 
         <div class="sidebar-footer">
             <button class="btn-logout" (click)="logout()">
-                Cerrar Sesión
+                <span class="icon">📤</span> Cerrar Sesión
             </button>
         </div>
     </aside>
 
     <main class="main-content">
         <header class="top-navbar">
-            <div class="user-info">
-                <p>Bienvenido, <strong>{{ userName }}</strong></p>
+            <div class="page-title">
+                <h1>{{ pageTitle }}</h1>
+                <span>{{ pageSubtitle }}</span>
+            </div>
+
+            <div class="user-profile">
+                <div class="user-info">
+                    <p>Bienvenido, <strong>Admin Virwo</strong></p>
+                </div>
+                <div class="avatar">AV</div>
             </div>
         </header>
 

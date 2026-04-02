@@ -1,0 +1,76 @@
+@use 'sass:color';
+@use 'colors' as *;
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+// Sobrescribir contenedor principal de SweetAlert2
+.swal2-popup {
+  font-family: vars.$font-family-base !important;
+  border-radius: 16px !important; // Más redondeado para un look moderno
+  padding: 2rem !important;
+  background: $white !important;
+
+  .swal2-title {
+    color: $primary-dark !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .swal2-html-container {
+    color: vars.$gray-600 !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+
+  // Estilos para los botones
+  .swal2-actions {
+    gap: 12px !important;
+    margin-top: 1.5rem !important;
+
+    button {
+      height: auto !important;
+      padding: 12px 24px !important;
+      font-size: 0.9rem !important;
+      font-weight: 600 !important;
+      border-radius: 12px !important; // Match con tus inputs y nav-links
+      transition: all 0.3s ease !important;
+      margin: 0 !important;
+    }
+
+    // Botón de Confirmar (en tu caso, el rojo de desactivar)
+    .swal2-confirm {
+      background-color: vars.$danger !important;
+      color: $white !important;
+      box-shadow: none !important;
+
+      &:hover {
+        background-color: color.adjust(vars.$danger, $lightness: -10%) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(vars.$danger, 0.3) !important;
+      }
+    }
+
+    // Botón de Cancelar
+    .swal2-cancel {
+      background-color: vars.$gray-600 !important;
+      color: $white !important;
+
+      &:hover {
+        background-color: color.adjust(vars.$gray-600, $lightness: -10%) !important;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // Ajuste de iconos
+  .swal2-icon {
+    border-color: rgba($primary-cyan, 0.5) !important;
+    color: $primary-cyan !important;
+    
+    &.swal2-warning {
+      border-color: #f8bb86 !important;
+      color: #f8bb86 !important;
+    }
+  }
+}

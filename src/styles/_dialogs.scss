@@ -1,0 +1,140 @@
+@use 'sass:color';
+@use 'colors' as *;
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+// Estilos globales para los contenedores de diálogos (Material o Custom)
+.cdk-overlay-backdrop {
+  background-color: rgba($primary-dark, 0.4) !important;
+  backdrop-filter: blur(2px);
+}
+
+// Clase para envolver modales manuales (con *ngIf)
+.modal-overlay {
+  @extend .cdk-overlay-backdrop;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: vars.$z-index-modal;
+}
+
+.custom-modal {
+  background-color: $white !important;
+  border-radius: 20px !important;
+  box-shadow: 0 15px 35px rgba($primary-dark, 0.2) !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-width: 95vw;
+  max-height: 90vh;
+
+  // Cabecera del modal
+  .modal-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid vars.$gray-100;
+
+    .header-content {
+      h2 {
+        margin: 0;
+        color: $primary-dark;
+        font-size: 1.4rem;
+        font-weight: 800;
+      }
+      p {
+        margin: 5px 0 0;
+        color: vars.$gray-600;
+        font-size: 0.85rem;
+      }
+    }
+
+    .btn-close {
+      background-color: rgba($primary-cyan, 0.15);
+      border: none;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: vars.$danger;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: vars.$danger;
+        color: $white;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // Cuerpo del modal
+  .modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+    @include mix.custom-scrollbar(6px, vars.$gray-200);
+
+    // Organización interna de formularios
+    .form-section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: $primary-dark;
+      margin-bottom: 1.5rem;
+      padding-bottom: 8px;
+      border-bottom: 2px solid $primary-cyan;
+      display: inline-block;
+    }
+  }
+
+  // Pie del modal
+  .modal-footer {
+    padding: 1.5rem 2rem;
+    background-color: vars.$gray-100;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+
+    button {
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    .btn-cancel {
+      background-color: $white;
+      color: vars.$gray-600;
+      border: 1px solid vars.$gray-300;
+
+      &:hover:not(:disabled) {
+        background-color: vars.$gray-200;
+        color: $primary-dark;
+      }
+    }
+
+    .btn-save {
+      background-color: $primary-cyan;
+      color: $white;
+      border: none;
+
+      &:hover:not(:disabled) {
+        background-color: color.adjust($primary-cyan, $lightness: -10%);
+        box-shadow: 0 4px 12px rgba($primary-cyan, 0.3);
+      }
+    }
+  }
+}

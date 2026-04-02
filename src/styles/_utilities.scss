@@ -1,0 +1,60 @@
+@use 'colors' as *;
+@use 'variables' as vars;
+
+$spacers: (0: 0, 1: 0.25rem, 2: 0.5rem, 3: 1rem, 4: 1.5rem, 5: 3rem);
+
+@each $i, $val in $spacers {
+  .m-#{$i} { margin: $val !important; }
+  .mt-#{$i} { margin-top: $val !important; }
+  .mb-#{$i} { margin-bottom: $val !important; }
+  .p-#{$i} { padding: $val !important; }
+}
+
+// Texto
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+.text-muted { color: vars.$gray-600 !important; }
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Visibilidad
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.align-items-center { align-items: center !important; }
+.justify-content-center { justify-content: center !important; }
+
+/* --- Tooltips Globales Animados --- */
+[data-tooltip] {
+  position: relative;
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background-color: $white;
+    color: $primary-cyan;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    pointer-events: none; /* Evita que el tooltip bloquee clics */
+    z-index: vars.$z-index-popover; /* 1060, asegura que se vea sobre modales y tablas */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-8px);
+  }
+}

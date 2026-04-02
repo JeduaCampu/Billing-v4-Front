@@ -1,135 +1,63 @@
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1050; // Para que quede por encima de tu Navbar/Sidebar
-  padding: 2rem;
-  animation: fadeIn 0.2s ease-out;
-}
+@use 'sass:color';
+@use '../../../../../styles/colors' as *;
+@use '../../../../../styles/variables' as vars;
+@use '../../../../../styles/mixins' as mix;
 
-.modal-dialog {
-  background: var(--bg-card);
-  width: 100%;
-  max-width: 900px;
-  max-height: 90vh;
+.create-form {
   display: flex;
   flex-direction: column;
-  overflow: hidden; // Ocultamos el scroll general para ponerselo al body
-  border-radius: var(--radius-md);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.modal-header {
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  background: var(--bg-main);
-
-  h2 {
-    margin: 0 0 0.25rem 0;
-    color: var(--primary);
-    font-size: 1.5rem;
-  }
-
-  p {
-    margin: 0;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-  }
-
-  .btn-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text-muted);
-    line-height: 1;
-    padding: 0;
-    
-    &:hover {
-      color: var(--error);
-    }
-  }
-}
-
-.modal-body {
-  padding: 2rem;
-  overflow-y: auto; // Aquí habilitamos el scroll interno
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-/* --- CLASES DEL FORMULARIO --- */
-.section-title {
-  font-size: 1.1rem;
-  color: var(--primary);
-  margin-bottom: 1.25rem;
-  border-left: 4px solid var(--primary-light);
-  padding-left: 0.5rem;
-}
-
-.subsection-title {
-  font-size: 0.95rem;
-  color: var(--text-main);
-  margin: 1.5rem 0 1rem;
-  font-weight: 600;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid var(--border-color);
-  margin: 2rem 0;
-}
-
+/* --- Cuadrícula del Formulario --- */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  .form-group {
+    margin-bottom: 0;
+  }
 
   .col-span-2 {
     grid-column: span 2;
-    @media (max-width: 768px) {
+  }
+  
+  @media (max-width: 768px) {
+    .col-span-2 {
       grid-column: span 1;
     }
   }
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
+.subsection-title {
+  font-size: 1rem;
+  color: vars.$gray-600;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
 
-  label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 0.4rem;
-  }
-
-  .form-control {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    color: var(--text-main);
-    transition: all 0.2s ease;
-
-    &:focus {
-      outline: none;
-      border-color: var(--primary-light);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.customer-selector {
+  margin-bottom: 1rem;
+  
+  .text-group {
+    width: 100%;
+    
+    label {
+      color: color.adjust(vars.$info, $lightness: -20%);
+      margin-bottom: 0.5rem;
+    }
+    
+    .input-minimal {
+      border-color: rgba(vars.$info, 0.4);
+      background-color: $white;
+      &:focus {
+        border-color: vars.$info;
+        box-shadow: 0 0 0 2px rgba(vars.$info, 0.2);
+      }
     }
   }
 }
@@ -138,44 +66,48 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-
-  .section-title { margin-bottom: 0; }
+  margin-bottom: 1rem;
+  
+  .form-section-title {
+    margin-bottom: 0;
+  }
 }
 
+/* --- Conceptos Array --- */
 .items-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
+  margin-bottom: 1rem;
+  
+  .item-row {
+    background-color: vars.$gray-100;
+    padding: 1.25rem;
+    border-radius: 16px;
+    border: 1px solid vars.$gray-200;
 
-.card-sub {
-  background-color: var(--bg-main);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 1.5rem;
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid vars.$gray-300;
 
-  .item-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px dashed var(--border-color);
-    color: var(--text-main);
+      strong {
+        color: $primary-dark;
+        font-size: 1.1rem;
+      }
+    }
 
-    .btn-remove {
-      background: none;
-      border: none;
-      color: var(--error);
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      &:hover { text-decoration: underline; }
+    .items-grid {
+      margin-bottom: 0;
     }
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+/* --- Utilidades Locales --- */
+.w-100 { width: 100%; }
+.gap-2 { gap: 1rem; }
+.mt-3 { margin-top: 1rem; }
+.text-danger { color: vars.$danger; }

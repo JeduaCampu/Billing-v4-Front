@@ -51,21 +51,18 @@ export class LoginComponent {
     }
 
     this.isLoading = true;
-    this.cdr.detectChanges(); // Para que aparezca el "Cargando..."
+    this.cdr.detectChanges();
 
     this.authService.login(this.loginData.email, this.loginData.password).subscribe({
       next: (res) => {
-        // 1. Apagamos el spinner lo primero
         this.isLoading = false;
 
         if (res.mfaRequired) {
-          // 2. Activamos la vista de MFA y guardamos el tipo
           this.showMfa = true;
-          this.mfaType = res.mfaType; // ¡Importante para los textos dinámicos!
+          this.mfaType = res.mfaType;
           this.tempUserId = res.userId;
           this.tempTenantId = res.tenantId;
 
-          // 3. Forzamos a Angular a que pinte la nueva pantalla
           this.cdr.detectChanges();
         } else {
           this.router.navigate(['/dashboard']);
@@ -81,7 +78,6 @@ export class LoginComponent {
 
   /**
    * Paso 2: Verificación del código de 6 dígitos (MFA)
-   * Decide dinámicamente qué método del servicio llamar según el mfaType
    */
   onVerifyMfa(): void {
     if (this.mfaCode.length !== 6) return;
@@ -89,7 +85,6 @@ export class LoginComponent {
     this.isLoading = true;
     this.cdr.detectChanges();
 
-    // Seleccionamos el flujo de verificación según el tipo que devolvió el login
     const verify$ = (this.mfaType === 'EMAIL')
       ? this.authService.verifyEmailMfa(this.tempUserId, this.mfaCode, this.tempTenantId)
       : this.authService.verifyMfa(this.tempUserId, this.mfaCode, this.tempTenantId);
@@ -104,8 +99,7 @@ export class LoginComponent {
         Swal.fire({
           icon: 'error',
           title: 'Código Inválido',
-          text: err.error?.message || 'El código de verificación es incorrecto o ya expiró.',
-          confirmButtonColor: '#1e3a8a'
+          text: err.error?.message || 'El código de verificación es incorrecto o ya expiró.'
         });
         this.cdr.detectChanges();
       }
@@ -159,7 +153,6 @@ export class LoginComponent {
       icon: 'error',
       title: title,
       text: message,
-      confirmButtonColor: '#1e3a8a',
       confirmButtonText: 'Reintentar'
     }).then(() => {
       this.cdr.detectChanges();
@@ -175,8 +168,7 @@ export class LoginComponent {
     Swal.fire({
       icon: 'warning',
       title: title,
-      text: text,
-      confirmButtonColor: '#1e3a8a'
+      text: text
     });
   }
 }

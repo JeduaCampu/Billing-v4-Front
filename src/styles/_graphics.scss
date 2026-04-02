@@ -1,0 +1,22 @@
+@use 'colors' as *;
+.card-glass {
+  background: $white;
+  border-radius: 15px;
+  border: 1px solid rgba($primary-cyan, 0.1);
+  box-shadow: $glass-shadow;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: $primary-dark;
+}
+
+.stat-label {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: rgba($primary-dark, 0.6);
+}

@@ -1,0 +1,52 @@
+@use 'colors' as *;
+@use 'variables' as vars;
+
+// 1. Media Queries Responsivas
+@mixin respond-to($breakpoint) {
+  @if map-has-key(vars.$breakpoints, $breakpoint) {
+    @media (min-width: map-get(vars.$breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "El valor '#{$breakpoint}' no está definido en los breakpoints.";
+  }
+}
+
+// 2. Flexbox Center (Ahorra 3 líneas cada vez)
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// 3. Truncar texto con puntos suspensivos (...)
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 4. Estilo rápido para scrollbars (Chrome/Safari)
+@mixin custom-scrollbar($width: 8px, $color: vars.$gray-300) {
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color;
+    border-radius: 10px;
+    &:hover {
+      background: darken($color, 10%);
+    }
+  }
+}
+
+// 5. Centrado absoluto (para elementos con position: absolute)
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

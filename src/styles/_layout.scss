@@ -1,0 +1,24 @@
+@use 'colors' as *;
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.main-content {
+  min-height: calc(100vh - 64px); // Ajustar según altura de tu navbar
+  padding: 2rem 0;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
